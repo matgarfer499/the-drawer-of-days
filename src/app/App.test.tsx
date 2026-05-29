@@ -1,0 +1,63 @@
+import { useExperienceStore } from "@features/scene-engine";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import type { ReactNode } from "react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { App } from "./App";
+
+// happy-dom has no animation timeline, so AnimatePresence never completes its
+// exit and leaves stale nodes mounted. We pass it through here to test the
+// routing/store wiring (which scene renders, and that clicks drive it) — the
+// animations themselves are verified visually in the browser.
+vi.mock("motion/react", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("motion/react")>();
+  return { ...actual, AnimatePresence: ({ children }: { children: ReactNode }) => children };
+});
+
+const openHub = async () => {
+  fireEvent.click(screen.getByText("toca para entrar"));
+  fireEvent.click(await screen.findByText("tira del lazo"));
+  return screen.findByText("El cajón de los días");
+};
+
+beforeEach(() => {
+  useExperienceStore.getState().reset();
+  window.history.replaceState(null, "", "/");
+});
+
+afterEach(() => {
+  cleanup();
+});
+
+describe("App navigation", () => {
+  it("walks door → sealed box → hub", async () => {
+    render(<App />);
+    expect(await openHub()).toBeTruthy();
+  });
+
+  it("opens a scene and the invariable close returns to the hub", async () => {
+    render(<App />);
+    await openHub();
+
+    fireEvent.click(screen.getByText("Nuestra cinta"));
+    expect(await screen.findByText("La cinta")).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "Volver a la caja" }));
+    expect(await screen.findByText("El cajón de los días")).toBeTruthy();
+  });
+
+  it("reveals and enters the finale only after every core scene is seen", async () => {
+    render(<App />);
+    await openHub();
+
+    expect(screen.queryByText("abrir el doble fondo")).toBeNull();
+
+    for (const label of ["Nuestra cinta", "Ábreme despacio", "Nuestro cielo"]) {
+      fireEvent.click(screen.getByText(label));
+      fireEvent.click(await screen.findByRole("button", { name: "Volver a la caja" }));
+      await screen.findByText("El cajón de los días");
+    }
+
+    fireEvent.click(await screen.findByText("abrir el doble fondo"));
+    expect(await screen.findByText("El doble fondo")).toBeTruthy();
+  });
+});
