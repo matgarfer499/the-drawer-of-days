@@ -7,6 +7,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Phase 3 — Content model + placeholders:** `content/schema.ts` makes Zod the single source of
+  truth — every type is inferred (`z.infer`), `alt` is mandatory on every image and width/height are
+  required (CLS = 0), and the tree's refinements enforce unique ids and live constellation→node
+  references. `content/index.ts` parses the whole tree on import (fail-fast); the `content/*.ts` files
+  hold themed Spanish placeholders, and `placeholderImage()` renders labelled SVG cards so every slot
+  shows something before real assets exist. The spoke enum and the incremental-letter reasons are kept
+  in sync with the scene-engine by tests. Real content drops in here without touching the UI. Hardened
+  by a multi-lens review (constellation id uniqueness, the `unlockedBy` reverse link, the audio path
+  convention). 92 tests.
 - **Phase 2 — Scrapbook design system + prop catalogue:** the typed, object-style
   (`tailwind-variants`) prop primitives in `shared/ui` — `Polaroid`, `WashiTape`, `StampPin`,
   `PostmarkDate`, `TornEdge`, `ThreadLine`, `PaperFrame` — each carrying deterministic handmade
