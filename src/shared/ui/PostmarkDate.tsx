@@ -21,9 +21,9 @@ interface PostmarkDateProps {
 }
 
 /**
- * A round postal cancellation mark: a double ring with a place arched above an
- * inked date. The date is real content, so it renders inside a `<time>`; the
- * rings are decorative. Seeded angle keeps each stamp a little askew.
+ * A round postal cancellation mark: a double ring with a place above an inked
+ * date. The date is real content, so it renders inside a `<time>`; the rings are
+ * decorative. Seeded angle keeps each stamp a little askew.
  */
 export function PostmarkDate({ id, date, dateTime, place, className }: PostmarkDateProps) {
   const { root, place: placeSlot, date: dateSlot } = postmark();
