@@ -22,6 +22,9 @@
   --font-hand: "Caveat Variable", "Segoe Script", cursive;
   --font-body: "Nunito Sans Variable", ui-sans-serif, system-ui, sans-serif;
 
+  /* Micro type for stamp/postmark labels (below text-xs); use a token, not arbitrary px. */
+  --text-stamp: 0.5625rem;
+
   /* ── Warm paper shadows (never grey/black) ── */
   --shadow-paper: 0 1px 1px oklch(0.3 0.04 60 / 0.18), 0 8px 18px oklch(0.3 0.04 60 / 0.14);
   --shadow-paper-lifted: 0 2px 3px oklch(0.3 0.04 60 / 0.22), 0 16px 30px oklch(0.3 0.04 60 / 0.18);
