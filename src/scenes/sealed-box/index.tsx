@@ -1,27 +1,63 @@
+import { content } from "@content";
+import { useReducedMotion } from "@features/reduced-motion";
 import { useExperienceStore } from "@features/scene-engine";
 import { SceneFrame } from "@shared/ui/SceneFrame";
+import { motion } from "motion/react";
 import { tv } from "tailwind-variants";
+import { shouldOpenFromDrag } from "./dragToOpen";
 
 const seal = tv({
   slots: {
-    box: "flex flex-col items-center gap-5 rounded-3xl border-2 border-aged-tan/50 bg-kraft-tan/40 px-10 py-12 shadow-paper-lifted",
+    wrap: "flex flex-col items-center gap-6",
+    box: "relative grid h-56 w-56 place-items-center rounded-2xl border-2 border-aged-tan/50 bg-kraft-tan/50 shadow-paper-lifted",
+    bandV: "pointer-events-none absolute inset-y-0 left-1/2 w-8 -translate-x-1/2 bg-faded-rose/55",
+    bandH: "pointer-events-none absolute inset-x-0 top-1/2 h-8 -translate-y-1/2 bg-faded-rose/55",
+    halo: "pointer-events-none absolute h-24 w-24 rounded-full bg-faded-rose/40 blur-md motion-safe:animate-breathe",
+    knot: "relative z-10 touch-none cursor-grab select-none rounded-full bg-faded-rose px-6 py-3 font-display text-base text-paper-cream shadow-paper active:cursor-grabbing focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
     label: "font-hand text-2xl text-ink-sepia",
-    ribbon:
-      "rounded-full bg-faded-rose px-6 py-2 font-display text-lg text-paper-cream shadow-paper transition-transform hover:scale-105 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
+    hint: "text-xs uppercase tracking-[0.2em] text-faded-ink",
   },
 });
 
-/** The sealed tin. Phase 4 turns the ribbon into a real drag-to-open gesture. */
+/**
+ * The sealed tin: a kraft box tied with a ribbon whose bow "breathes" to invite a
+ * pull. Drag the bow (any direction) past a threshold — or just tap it — to untie
+ * and open. Breathing is motion-safe CSS, so it rests under prefers-reduced-motion;
+ * the tap always works.
+ */
 export function SealedBox() {
   const openBox = useExperienceStore((state) => state.openBox);
-  const { box, label, ribbon } = seal();
+  const reduced = useReducedMotion();
+  const { wrap, box, bandV, bandH, halo, knot, label, hint } = seal();
   return (
     <SceneFrame>
-      <div className={box()}>
-        <span className={label()}>una caja atada con un lazo</span>
-        <button type="button" className={ribbon()} onClick={openBox}>
-          tira del lazo
-        </button>
+      <div className={wrap()}>
+        <div className={box()}>
+          <span aria-hidden="true" className={bandV()} />
+          <span aria-hidden="true" className={bandH()} />
+          <span className="relative grid place-items-center">
+            <span aria-hidden="true" className={halo()} />
+            <motion.button
+              type="button"
+              className={knot()}
+              onClick={openBox}
+              drag
+              dragSnapToOrigin
+              dragElastic={0.5}
+              dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+              whileDrag={reduced ? {} : { scale: 1.08 }}
+              onDragEnd={(_event, info) => {
+                if (shouldOpenFromDrag({ offset: info.offset.x, velocity: info.velocity.x })) {
+                  openBox();
+                }
+              }}
+            >
+              tira del lazo
+            </motion.button>
+          </span>
+        </div>
+        <span className={label()}>{content.opening.subGreetingLine}</span>
+        <span className={hint()}>o tócalo</span>
       </div>
     </SceneFrame>
   );
