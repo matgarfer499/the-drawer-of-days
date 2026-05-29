@@ -4,11 +4,15 @@ import type { ReactNode } from "react";
 import { tv } from "tailwind-variants";
 
 const frame = tv({
-  base: "absolute inset-0 grid h-[100dvh] w-[100dvw] place-items-center overflow-hidden px-6 text-center",
+  slots: {
+    section:
+      "absolute inset-0 grid h-[100dvh] w-[100dvw] place-items-center overflow-hidden px-6 text-center",
+    hero: "absolute inset-3 -z-10 rounded-[2rem]",
+  },
   variants: {
     tone: {
-      paper: "bg-paper-cream text-ink-sepia",
-      night: "bg-night-paper text-silver-pen",
+      paper: { section: "bg-paper-cream text-ink-sepia", hero: "bg-kraft-tan/30 shadow-paper" },
+      night: { section: "bg-night-paper text-silver-pen", hero: "bg-silver-pen/10 shadow-paper" },
     },
   },
   defaultVariants: { tone: "paper" },
@@ -17,16 +21,20 @@ const frame = tv({
 interface SceneFrameProps {
   children: ReactNode;
   tone?: "paper" | "night";
+  /** shared-layout id: the hub keepsake with the same id morphs into this hero */
+  morphId?: string;
 }
 
 /**
- * Full-screen container for a scene. Owns the enter/exit transition so every
- * scene animates consistently, and degrades to a plain crossfade under
- * `prefers-reduced-motion`. The real shared-element morph (layoutId) lands in
- * phase 4 — here it's a tasteful fade/scale.
+ * Full-screen container for a scene. Owns the consistent enter/exit transition and
+ * degrades to a plain crossfade under prefers-reduced-motion. When given a
+ * `morphId`, it renders a hero panel that the matching hub keepsake grows into
+ * (and shrinks back to on close) — the shared-element morph. Reduced motion drops
+ * the morph entirely.
  */
-export function SceneFrame({ children, tone = "paper" }: SceneFrameProps) {
+export function SceneFrame({ children, tone = "paper", morphId }: SceneFrameProps) {
   const reduced = useReducedMotion();
+  const { section, hero } = frame({ tone });
   const motionProps = reduced
     ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
     : {
@@ -37,10 +45,18 @@ export function SceneFrame({ children, tone = "paper" }: SceneFrameProps) {
 
   return (
     <motion.section
-      className={frame({ tone })}
+      className={section()}
       {...motionProps}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
+      {morphId && !reduced ? (
+        <motion.div
+          aria-hidden="true"
+          layoutId={morphId}
+          className={hero()}
+          transition={{ type: "spring", stiffness: 200, damping: 26 }}
+        />
+      ) : null}
       {children}
     </motion.section>
   );

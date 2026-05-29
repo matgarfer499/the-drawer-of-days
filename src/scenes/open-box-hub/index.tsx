@@ -85,7 +85,10 @@ export function Hub() {
                 whileHover={reduced ? {} : { scale: 1.06 }}
                 whileTap={reduced ? {} : { scale: 0.97 }}
               >
-                <span className={slots.frame()}>
+                <motion.span
+                  className={slots.frame()}
+                  {...(reduced ? {} : { layoutId: `spoke-${object.scene}` })}
+                >
                   <img
                     className={slots.art()}
                     src={object.art.src}
@@ -105,7 +108,7 @@ export function Hub() {
                       ✓
                     </StampPin>
                   )}
-                </span>
+                </motion.span>
                 <span className={slots.label()}>{object.label}</span>
               </motion.button>
             );

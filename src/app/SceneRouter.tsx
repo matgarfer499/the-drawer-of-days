@@ -7,7 +7,7 @@ import { LetterEnvelope } from "@scenes/letter-envelope";
 import { Hub } from "@scenes/open-box-hub";
 import { PaperSky } from "@scenes/paper-sky";
 import { SealedBox } from "@scenes/sealed-box";
-import { AnimatePresence } from "motion/react";
+import { AnimatePresence, LayoutGroup } from "motion/react";
 import type { ReactElement } from "react";
 
 const SPOKE_SCENE: Record<SpokeSceneId, ReactElement> = {
@@ -19,8 +19,9 @@ const SPOKE_SCENE: Record<SpokeSceneId, ReactElement> = {
 /**
  * Renders exactly one scene for the current status. `AnimatePresence mode="wait"`
  * lets the leaving scene finish its exit before the next enters; each scene owns
- * its transition via SceneFrame. The shared-element morph (layoutId) is layered
- * on in phase 4 — for now scenes cross-fade.
+ * its transition via SceneFrame. A hub keepsake and its scene share a `layoutId`,
+ * so the object morphs into the scene's hero and back; LayoutGroup coordinates
+ * that shared-layout animation across the AnimatePresence swap.
  */
 export function SceneRouter() {
   const status = useExperienceStore((state) => state.status);
@@ -47,7 +48,9 @@ export function SceneRouter() {
 
   return (
     <div className="relative h-[100dvh] w-[100dvw] overflow-hidden">
-      <AnimatePresence mode="wait">{view}</AnimatePresence>
+      <LayoutGroup>
+        <AnimatePresence mode="wait">{view}</AnimatePresence>
+      </LayoutGroup>
     </div>
   );
 }
