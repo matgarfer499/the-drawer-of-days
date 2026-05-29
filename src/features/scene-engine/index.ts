@@ -10,3 +10,5 @@ export type {
   SceneId,
   SpokeSceneId,
 } from "./types";
+export { sceneFromSearch, sceneSearchParam, sceneToSearch } from "./urlSync";
+export { useSceneUrlSync } from "./useSceneUrlSync";
