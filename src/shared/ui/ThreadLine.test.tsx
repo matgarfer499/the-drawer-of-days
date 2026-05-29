@@ -18,4 +18,11 @@ describe("ThreadLine", () => {
     const { container } = render(<ThreadLine id="t" from={from} to={to} />);
     expect(container.querySelector("path")?.getAttribute("d")).toBe(stitchPath(from, to, "t"));
   });
+
+  it("keeps the stroke uniform under non-uniform scaling (round stitches, even width)", () => {
+    const { container } = render(<ThreadLine id="t" from={from} to={to} />);
+    expect(container.querySelector("path")?.getAttribute("vector-effect")).toBe(
+      "non-scaling-stroke",
+    );
+  });
 });

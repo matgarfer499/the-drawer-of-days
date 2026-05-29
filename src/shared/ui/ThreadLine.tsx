@@ -44,7 +44,13 @@ export function ThreadLine({
       viewBox={`0 0 ${width} ${height}`}
       preserveAspectRatio="none"
     >
-      <path className={path()} d={stitchPath(from, to, id, opts)} />
+      {/* non-scaling-stroke: the viewBox stretches (preserveAspectRatio=none) but the
+          2px thread and its round stitch-dashes must stay uniform, not flatten to ovals */}
+      <path
+        className={path()}
+        d={stitchPath(from, to, id, opts)}
+        vectorEffect="non-scaling-stroke"
+      />
     </svg>
   );
 }
