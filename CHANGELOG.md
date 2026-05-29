@@ -7,6 +7,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Phase 4 — The experience comes alive (door, sealed box, hub + morph):** the first three scenes
+  wired for real. The Door greets from `@content` and taps to enter (which unlocks audio); the
+  SealedBox is a kraft tin whose ribbon bow "breathes" (motion-safe) and opens on a forgiving drag in
+  any direction — or a tap; the Hub lays `content.hubObjects` out with a seeded `hubLayout`, veils the
+  unopened, sews opened keepsakes together with the red `ThreadLine`, stamps them "Visto", and keeps
+  the finale gate and guided tour in a keyboard-navigable `<nav>`. A keepsake morphs into its scene and
+  back via a shared `layoutId` (LayoutGroup), with a reduced-motion crossfade fallback. Focus is
+  managed across every transition; controls meet the 44px target and honour safe areas. 113 tests.
 - **Phase 3 — Content model + placeholders:** `content/schema.ts` makes Zod the single source of
   truth — every type is inferred (`z.infer`), `alt` is mandatory on every image and width/height are
   required (CLS = 0), and the tree's refinements enforce unique ids and live constellation→node
