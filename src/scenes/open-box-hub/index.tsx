@@ -12,12 +12,14 @@ import { hubLayout, hubPositionVars } from "./hubLayout";
 const layout = tv({
   slots: {
     stage: "relative mx-auto h-full w-full max-w-md",
-    title: "absolute inset-x-0 top-[3%] text-center font-hand text-2xl text-faded-rose",
+    title:
+      "absolute inset-x-0 top-[max(0.75rem,env(safe-area-inset-top))] text-center font-hand text-2xl text-faded-rose",
     nav: "absolute inset-0",
-    controls: "absolute inset-x-0 bottom-[3%] flex flex-col items-center gap-2",
+    controls:
+      "absolute inset-x-0 bottom-[max(0.75rem,env(safe-area-inset-bottom))] flex flex-col items-center gap-2",
     secret:
-      "rounded-full bg-golden-hour/40 px-5 py-2 font-hand text-xl text-rose-deep shadow-paper transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
-    tour: "text-xs uppercase tracking-[0.2em] text-faded-ink underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
+      "inline-flex min-h-11 items-center rounded-full bg-golden-hour/40 px-5 font-hand text-xl text-rose-deep shadow-paper transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
+    tour: "inline-flex min-h-11 items-center px-4 text-xs uppercase tracking-[0.2em] text-faded-ink underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
   },
 });
 
