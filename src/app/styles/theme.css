@@ -25,4 +25,6 @@
   /* ── Warm paper shadows (never grey/black) ── */
   --shadow-paper: 0 1px 1px oklch(0.3 0.04 60 / 0.18), 0 8px 18px oklch(0.3 0.04 60 / 0.14);
   --shadow-paper-lifted: 0 2px 3px oklch(0.3 0.04 60 / 0.22), 0 16px 30px oklch(0.3 0.04 60 / 0.18);
+  /* A whisper of a shadow — a strip of tape barely lifts off the page. */
+  --shadow-tape: 0 1px 1px oklch(0.3 0.04 60 / 0.1);
 }
