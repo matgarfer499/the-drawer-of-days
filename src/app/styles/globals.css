@@ -1,0 +1,29 @@
+@import "tailwindcss";
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/caveat";
+@import "@fontsource-variable/nunito-sans";
+@import "./theme.css";
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-paper-cream);
+  color: var(--color-ink-sepia);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* The experience lives on a single screen — the page itself never scrolls. */
+#root {
+  overflow: hidden;
+}

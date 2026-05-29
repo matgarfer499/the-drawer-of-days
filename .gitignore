@@ -1,0 +1,41 @@
+# dependencies
+node_modules
+.pnpm-store
+
+# build output
+dist
+dist-ssr
+*.local
+
+# environment & secrets — NEVER commit the Context7 token or anything private
+.env
+.env.*
+!.env.example
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# editor / OS
+.DS_Store
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+# Claude Code local-only
+.claude/settings.local.json
+CLAUDE.local.md
+
+# ── PERSONAL CONTENT STAYS PRIVATE ─────────────────────────────
+# This is a public repo. Only committed placeholders (placeholder-*, *.svg)
+# are tracked; real photos / audio / video are dropped in locally and ignored.
+src/assets/photos/*
+src/assets/audio/*
+src/assets/video/*
+!src/assets/photos/.gitkeep
+!src/assets/audio/.gitkeep
+!src/assets/photos/placeholder-*
+!src/assets/audio/placeholder-*
+!src/assets/photos/*.svg
+src/content/private/

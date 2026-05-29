@@ -1,0 +1,28 @@
+/**
+ * Scrapbook design tokens (Tailwind v4, CSS-first via @theme).
+ * Generates utilities like bg-paper-cream, text-ink-sepia, font-hand, shadow-paper.
+ */
+@theme {
+  /* ── Palette ── */
+  --color-paper-cream: #f4ecdd;
+  --color-kraft-tan: #d8c3a0;
+  --color-aged-tan: #b79a6e;
+  --color-ink-sepia: #3a2e25;
+  --color-faded-ink: #6b5b4d;
+  --color-faded-rose: #c46a6a;
+  --color-rose-deep: #a14b4b;
+  --color-sage-dust: #8a9a7b;
+  --color-dusty-teal: #5e8c8c;
+  --color-golden-hour: #e3b055;
+  --color-night-paper: #2a2e3a;
+  --color-silver-pen: #c9cdd6;
+
+  /* ── Typography (self-hosted variable fonts) ── */
+  --font-display: "Fraunces Variable", ui-serif, Georgia, serif;
+  --font-hand: "Caveat Variable", "Segoe Script", cursive;
+  --font-body: "Nunito Sans Variable", ui-sans-serif, system-ui, sans-serif;
+
+  /* ── Warm paper shadows (never grey/black) ── */
+  --shadow-paper: 0 1px 1px oklch(0.3 0.04 60 / 0.18), 0 8px 18px oklch(0.3 0.04 60 / 0.14);
+  --shadow-paper-lifted: 0 2px 3px oklch(0.3 0.04 60 / 0.22), 0 16px 30px oklch(0.3 0.04 60 / 0.18);
+}

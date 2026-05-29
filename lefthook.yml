@@ -1,0 +1,12 @@
+pre-commit:
+  parallel: true
+  commands:
+    typecheck:
+      run: pnpm typecheck
+    check:
+      run: pnpm check
+
+pre-push:
+  commands:
+    test:
+      run: pnpm test
