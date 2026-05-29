@@ -7,6 +7,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Phase 2 — Scrapbook design system + prop catalogue:** the typed, object-style
+  (`tailwind-variants`) prop primitives in `shared/ui` — `Polaroid`, `WashiTape`, `StampPin`,
+  `PostmarkDate`, `TornEdge`, `ThreadLine`, `PaperFrame` — each carrying deterministic handmade
+  imperfection (the seeded `--seed-*` CSS vars) and accessibility by default: required `alt`,
+  decorative props hidden from assistive tech, meaningful ones given an accessible name, dates as
+  `<time>`. Adds the shared `#paper-tear` SVG filter (`ScrapbookDefs`, mounted once in `App`), the
+  `stitchPath` red-thread geometry helper, the `--shadow-tape` and `--text-stamp` tokens, and a
+  `@shared/ui` barrel. Hardened by a multi-lens adversarial review (stamp-glyph contrast in
+  low-contrast tones, non-scaling thread stroke, single-line caption guard). 70 tests.
 - **Phase 1 — Experience engine:** a guarded, hub-and-spoke scene state machine
   (door → sealed box → hub ⇄ scenes → gated finale) with a Zustand store and pure
   selectors (red thread, finale gate, core progress), two-way URL↔scene sync, and
