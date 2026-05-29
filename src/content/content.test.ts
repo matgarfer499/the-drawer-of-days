@@ -34,4 +34,11 @@ describe("content", () => {
       expect(reason?.unlockedBy).toBe(scene);
     }
   });
+
+  it("never declares unlockedBy for a scene that lights no reason (the reverse link)", () => {
+    for (const reason of reasons) {
+      if (!reason.unlockedBy) continue;
+      expect(SCENE_CONFIG[reason.unlockedBy].unlocksReasonId).toBe(reason.id);
+    }
+  });
 });

@@ -142,6 +142,9 @@ export const contentSchema = z
   .refine((c) => hasUniqueIds(c.milestones), { error: "milestones: los ids deben ser únicos." })
   .refine((c) => hasUniqueIds(c.reasons), { error: "reasons: los ids deben ser únicos." })
   .refine((c) => hasUniqueIds(c.sky.nodes), { error: "sky.nodes: los ids deben ser únicos." })
+  .refine((c) => hasUniqueIds(c.sky.constellations), {
+    error: "sky.constellations: los ids deben ser únicos.",
+  })
   .refine(
     (c) => {
       const ids = new Set(c.sky.nodes.map((n) => n.id));

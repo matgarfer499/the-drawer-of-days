@@ -96,4 +96,18 @@ describe("contentSchema integrity", () => {
     };
     expect(contentSchema.safeParse(broken).success).toBe(false);
   });
+
+  it("rejects duplicate constellation ids", () => {
+    const broken = {
+      ...baseContent,
+      sky: {
+        ...baseContent.sky,
+        constellations: [
+          { id: "c1", name: "n", starIds: ["n1", "n2"] },
+          { id: "c1", name: "m", starIds: ["n1", "n2"] },
+        ],
+      },
+    };
+    expect(contentSchema.safeParse(broken).success).toBe(false);
+  });
 });
