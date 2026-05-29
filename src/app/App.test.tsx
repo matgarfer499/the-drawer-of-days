@@ -1,8 +1,16 @@
+import { content } from "@content";
 import { useExperienceStore } from "@features/scene-engine";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "./App";
+
+/** The hub label that opens a given spoke (labels come from @content). */
+const labelFor = (scene: string): string => {
+  const object = content.hubObjects.find((o) => o.scene === scene);
+  if (!object) throw new Error(`no hub object for ${scene}`);
+  return object.label;
+};
 
 // happy-dom has no animation timeline, so AnimatePresence never completes its
 // exit and leaves stale nodes mounted. We pass it through here to test the
@@ -38,7 +46,7 @@ describe("App navigation", () => {
     render(<App />);
     await openHub();
 
-    fireEvent.click(screen.getByText("Nuestra cinta"));
+    fireEvent.click(screen.getByText(labelFor("timeline")));
     expect(await screen.findByText("La cinta")).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "Volver a la caja" }));
@@ -51,8 +59,8 @@ describe("App navigation", () => {
 
     expect(screen.queryByText("abrir el doble fondo")).toBeNull();
 
-    for (const label of ["Nuestra cinta", "Ábreme despacio", "Nuestro cielo"]) {
-      fireEvent.click(screen.getByText(label));
+    for (const scene of ["timeline", "letter", "sky"] as const) {
+      fireEvent.click(screen.getByText(labelFor(scene)));
       fireEvent.click(await screen.findByRole("button", { name: "Volver a la caja" }));
       await screen.findByText("El cajón de los días");
     }
