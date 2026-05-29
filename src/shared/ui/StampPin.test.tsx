@@ -23,4 +23,24 @@ describe("StampPin", () => {
     );
     expect(screen.getByText("★")).toBeTruthy();
   });
+
+  it("keeps a stamp's glyph legible (ink) in tones that fail contrast on the cream face", () => {
+    const { container } = render(
+      <StampPin id="s" kind="stamp" tone="sage">
+        ★
+      </StampPin>,
+    );
+    const cls = container.firstElementChild?.className ?? "";
+    expect(cls).toContain("text-ink-sepia");
+    expect(cls).not.toContain("text-sage-dust");
+  });
+
+  it("keeps the requested tone for stamps that already clear contrast", () => {
+    const { container } = render(
+      <StampPin id="s" kind="stamp" tone="rose">
+        ★
+      </StampPin>,
+    );
+    expect(container.firstElementChild?.className ?? "").toContain("text-rose-deep");
+  });
 });

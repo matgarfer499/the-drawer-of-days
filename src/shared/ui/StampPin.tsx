@@ -21,6 +21,13 @@ const stampPin = tv({
       golden: "text-golden-hour",
     },
   },
+  // A labelled stamp's glyph is meaningful, so it must stay legible: sage/golden don't
+  // clear WCAG 3:1 on the cream stamp face, so a stamp in those tones inks in sepia
+  // instead. Pins keep the full palette (their head is a decorative dot, no glyph).
+  compoundVariants: [
+    { kind: "stamp", tone: "sage", class: "text-ink-sepia" },
+    { kind: "stamp", tone: "golden", class: "text-ink-sepia" },
+  ],
   defaultVariants: { kind: "stamp", tone: "ink" },
 });
 
