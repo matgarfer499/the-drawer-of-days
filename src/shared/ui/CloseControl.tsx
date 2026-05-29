@@ -1,5 +1,5 @@
 import { useExperienceStore } from "@features/scene-engine";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { tv } from "tailwind-variants";
 
 const button = tv({
@@ -22,6 +22,7 @@ export function CloseControl() {
   const closeScene = useExperienceStore((state) => state.closeScene);
   const closeFinale = useExperienceStore((state) => state.closeFinale);
   const closeable = status === "inScene" || status === "finale";
+  const ref = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!closeable) return;
@@ -32,10 +33,17 @@ export function CloseControl() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [closeable, status, closeScene, closeFinale]);
 
+  // When a scene opens, the originating keepsake unmounts — move focus here so
+  // keyboard/AT users land on a known control instead of dropping to <body>.
+  useEffect(() => {
+    if (closeable) ref.current?.focus();
+  }, [closeable]);
+
   if (!closeable) return null;
 
   return (
     <button
+      ref={ref}
       type="button"
       aria-label="Volver a la caja"
       className={button()}

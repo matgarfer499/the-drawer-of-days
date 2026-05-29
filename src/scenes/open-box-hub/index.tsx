@@ -5,6 +5,7 @@ import { SceneFrame } from "@shared/ui/SceneFrame";
 import { StampPin } from "@shared/ui/StampPin";
 import { ThreadLine } from "@shared/ui/ThreadLine";
 import { motion } from "motion/react";
+import { useEffect, useRef } from "react";
 import { tv } from "tailwind-variants";
 import { hubLayout, hubPositionVars } from "./hubLayout";
 
@@ -47,9 +48,21 @@ export function Hub() {
   const startTour = useExperienceStore((state) => state.startTour);
   const visited = useExperienceStore((state) => state.visitedScenes);
   const finaleUnlocked = useExperienceStore((state) => state.finaleUnlocked);
+  const previousScene = useExperienceStore((state) => state.previousScene);
   const reduced = useReducedMotion();
 
   const objects = content.hubObjects;
+  const keepsakeRefs = useRef(new Map<string, HTMLButtonElement | null>());
+
+  // On returning to the hub, put focus back on the keepsake just closed (or the
+  // first one when the box first opens) so keyboard/AT users aren't dropped to <body>.
+  useEffect(() => {
+    const refs = keepsakeRefs.current;
+    const fromPrevious = previousScene ? refs.get(previousScene) : undefined;
+    const first = objects[0] ? refs.get(objects[0].scene) : undefined;
+    (fromPrevious ?? first)?.focus();
+  }, [previousScene]);
+
   const points = hubLayout(objects.length, content.seed);
   const pointFor = new Map(objects.map((object, i) => [object.scene, points[i]]));
   const visitedOrder = [...visited];
@@ -78,6 +91,9 @@ export function Hub() {
             return (
               <motion.button
                 key={object.id}
+                ref={(el) => {
+                  keepsakeRefs.current.set(object.scene, el);
+                }}
                 type="button"
                 className={slots.button()}
                 style={hubPositionVars(point)}

@@ -69,3 +69,22 @@ describe("App navigation", () => {
     expect(await screen.findByText("El doble fondo")).toBeTruthy();
   });
 });
+
+describe("App focus management", () => {
+  it("moves focus to the close control when a scene opens", async () => {
+    render(<App />);
+    await openHub();
+    fireEvent.click(screen.getByText(labelFor("timeline")));
+    await screen.findByText("La cinta");
+    expect(document.activeElement).toBe(screen.getByRole("button", { name: "Volver a la caja" }));
+  });
+
+  it("returns focus to the opened keepsake when the scene closes", async () => {
+    render(<App />);
+    await openHub();
+    fireEvent.click(screen.getByText(labelFor("timeline")));
+    fireEvent.click(await screen.findByRole("button", { name: "Volver a la caja" }));
+    await screen.findByText("El cajón de los días");
+    expect(document.activeElement).toBe(screen.getByText(labelFor("timeline")).closest("button"));
+  });
+});
