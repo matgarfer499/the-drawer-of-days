@@ -47,9 +47,10 @@ export function SealedBox() {
               dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
               whileDrag={reduced ? {} : { scale: 1.08 }}
               onDragEnd={(_event, info) => {
-                if (shouldOpenFromDrag({ offset: info.offset.x, velocity: info.velocity.x })) {
-                  openBox();
-                }
+                // radial magnitude so a pull in ANY direction counts (the bow drags freely)
+                const offset = Math.hypot(info.offset.x, info.offset.y);
+                const velocity = Math.hypot(info.velocity.x, info.velocity.y);
+                if (shouldOpenFromDrag({ offset, velocity })) openBox();
               }}
             >
               tira del lazo
