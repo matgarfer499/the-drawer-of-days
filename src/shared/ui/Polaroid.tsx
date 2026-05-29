@@ -7,7 +7,7 @@ const polaroid = tv({
     photoWrap: "block aspect-[4/5] overflow-hidden rounded-[1px] bg-aged-tan/30",
     photo: "h-full w-full object-cover",
     caption:
-      "absolute inset-x-2 bottom-1 text-center font-hand text-lg leading-tight text-faded-ink",
+      "absolute inset-x-2 bottom-1 truncate text-center font-hand text-lg leading-tight text-faded-ink",
   },
   variants: {
     size: {
