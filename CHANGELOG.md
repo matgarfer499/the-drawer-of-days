@@ -7,6 +7,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Phase 6 — The letter envelope (incremental letter):** the placeholder becomes the real sobre. Reasons
+  from `content.reasons` are pulled out of a kraft envelope one at a time onto a letter that scrolls *inside*
+  its `PaperFrame` (the page never scrolls). The letter writes itself: a reason tagged `unlockedBy` stays a
+  pending placeholder — naming the scene that will light it — until that scene has been seen (its id lands in
+  the engine's `unlockedReasons` via `recordVisit`), then becomes pullable. The pull/`composeLetter` logic
+  (ordering, the available/pending/revealed split, the clamp) is test-driven, and the coupling
+  `unlockedBy` ↔ `unlockedReasons` ↔ `unlocksReasonId` is verified against the scene-engine. Each pulled
+  reason hand-writes in; reduced motion drops the slide and keeps the ritual. Keeps `morphId="spoke-letter"`.
+  Hardened by a multi-lens adversarial review (the emptied pull button now keeps keyboard focus via
+  `aria-disabled`, shows a meaningful empty label, and announces completion through a `role="status"` live
+  region). 134 tests.
 - **Phase 5 — The cassette timeline:** the placeholder scene becomes the real tape. `content.milestones`
   lay along a horizontal, scroll-snapped track you swipe through, each a Polaroid + postmark date + title +
   body tagged Cara A/B. The `CassetteDeck`'s two reels spin with the scroll (`useScroll` → `useTransform`)
