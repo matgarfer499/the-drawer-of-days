@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Phase 5 — The cassette timeline:** the placeholder scene becomes the real tape. `content.milestones`
+  lay along a horizontal, scroll-snapped track you swipe through, each a Polaroid + postmark date + title +
+  body tagged Cara A/B. The `CassetteDeck`'s two reels spin with the scroll (`useScroll` → `useTransform`)
+  and whirr gold the faster you scrub — the same `cassetteRate` (a tested pure mapping) that phase 8 will
+  feed into `AudioEngine.rate()`. A dot `<nav>` jumps between milestones for keyboard/AT users and the tape
+  itself is keyboard-focusable; under reduced motion the reels rest still and the snap jumps instead of
+  glides. Keeps `morphId="spoke-timeline"`, so it grows from (and shrinks back to) its hub keepsake. The
+  postmark, snap-index and scrub-rate logic are test-driven. Hardened by a multi-lens adversarial review
+  (glow decay via `useVelocity`, AA contrast on the Cara tag/subtitle/dots, keyboard scrub, object-style
+  spoke angles). 125 tests.
 - **Phase 4 — The experience comes alive (door, sealed box, hub + morph):** the first three scenes
   wired for real. The Door greets from `@content` and taps to enter (which unlocks audio); the
   SealedBox is a kraft tin whose ribbon bow "breathes" (motion-safe) and opens on a forgiving drag in
