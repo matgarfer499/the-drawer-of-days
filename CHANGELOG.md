@@ -7,6 +7,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Phase 8 — The double-bottom finale (R3F + song):** the secret compartment. Our polaroids lift into the
+  paper sky and settle (DOM polaroids with real alt text, risen via motion and seeded by `ascendingLayout`),
+  the thesis line from `@content` glows in, and a frame is left deliberately empty — the promise, "our next
+  chapter". Behind it all is the project's **only WebGL**: a lazy R3F field of phosphorescent paper stars
+  with a contained bloom, in its own chunk that never ships on first paint (the persistent `CanvasLayer`
+  mounts it only in the finale under full motion; a new `SceneFrame` `bare` option lets it show through; an
+  error boundary degrades to a night surface if the chunk fails). Sound is the single Howler **`AudioEngine`**
+  — the open-the-box gesture resumes the context and starts a near-inaudible ambient loop, the finale fades
+  it down and lets the reserved song lead, the cassette swipe bends the rate, and an always-reachable mute
+  control is the only audio chrome. It degrades to silence until the real MP3s land (`resolveAudioSrc`,
+  test-driven), so the experience works muted. Reduced motion is a complete 2D finale with no WebGL and no
+  audio. Hardened by a multi-lens review (frameloop→demand, idempotent song handover, in-gesture unlock, AA
+  contrast, reading order, the promise label modelled in content, and the WebGL error boundary). 156 tests.
 - **Phase 7 — The paper sky (playful 2D zone):** the placeholder becomes the constellation game.
   `content.sky.nodes` are cut-out stars pinned to a night-paper ground by their coordinates; tapping a star
   lights (or dims) it and emerges its photo as a polaroid. Light every star of a constellation and its line
