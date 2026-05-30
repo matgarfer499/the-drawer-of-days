@@ -11,6 +11,7 @@ const ascending = (n: number) =>
 
 // TODO(contenido real): el mensaje culminante, 5–9 polaroids que ascienden, y el hueco-promesa.
 export const finale: Finale = {
+  label: "El doble fondo",
   thesisLine: "Cabes en mi mano y a la vez llenas el cielo.",
   ascendingPhotos: [ascending(1), ascending(2), ascending(3), ascending(4), ascending(5)],
   promise: {

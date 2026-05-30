@@ -115,11 +115,20 @@ const promiseSchema = z.object({
 
 /** The double-bottom finale. */
 export const finaleSchema = z.object({
+  /** the secret compartment's name, shown as the eyebrow */
+  label: z.string().min(1),
   thesisLine: z.string().min(1),
   ascendingPhotos: z.array(assetRefSchema).min(1).readonly(),
   promise: promiseSchema,
 });
 export type Finale = z.infer<typeof finaleSchema>;
+
+/** A scene's on-screen title and its handwritten tagline. */
+export const sceneCopySchema = z.object({
+  title: z.string().min(1),
+  tagline: z.string().min(1),
+});
+export type SceneCopy = z.infer<typeof sceneCopySchema>;
 
 const hasUniqueIds = (items: ReadonlyArray<{ id: string }>): boolean =>
   new Set(items.map((item) => item.id)).size === items.length;
@@ -127,12 +136,16 @@ const hasUniqueIds = (items: ReadonlyArray<{ id: string }>): boolean =>
 /** The whole content tree. `.refine`s enforce cross-references a flat schema can't. */
 export const contentSchema = z
   .object({
-    herName: z.string().min(1),
     anniversaryDate: z.iso.date(),
     relationshipStartDate: z.iso.date(),
     /** global seed — reshuffles every seeded transform at once */
     seed: z.int().min(0),
     opening: openingSchema,
+    scenes: z.object({
+      timeline: sceneCopySchema,
+      letter: sceneCopySchema,
+      sky: sceneCopySchema,
+    }),
     hubObjects: z.array(hubObjectSchema).min(1).readonly(),
     milestones: z.array(milestoneSchema).min(1).readonly(),
     reasons: z.array(reasonSchema).min(1).readonly(),

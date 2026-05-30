@@ -2,6 +2,7 @@ import { finale } from "./finale";
 import { hubObjects } from "./hub";
 import { meta, opening } from "./meta";
 import { reasons } from "./reasons";
+import { scenes } from "./scenes";
 import { contentSchema } from "./schema";
 import { sky } from "./sky";
 import { song } from "./song";
@@ -16,6 +17,7 @@ import { milestones } from "./timeline";
 export const content = contentSchema.parse({
   ...meta,
   opening,
+  scenes,
   hubObjects,
   milestones,
   reasons,
@@ -33,6 +35,7 @@ export type {
   Milestone,
   Opening,
   Reason,
+  SceneCopy,
   Sky,
   SkyNode,
   Song,

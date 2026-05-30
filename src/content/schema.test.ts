@@ -40,12 +40,13 @@ describe("reasonSchema", () => {
 });
 
 const node = (id: string) => ({ id, label: id, position: { x: 10, y: 20 } });
+const sceneCopy = { title: "t", tagline: "g" };
 const baseContent = {
-  herName: "X",
   anniversaryDate: "2024-02-14",
   relationshipStartDate: "2021-02-14",
   seed: 1,
   opening: { greetingLine: "g", subGreetingLine: "s" },
+  scenes: { timeline: sceneCopy, letter: sceneCopy, sky: sceneCopy },
   hubObjects: [{ id: "h1", label: "l", scene: "timeline", art: validAsset, palmSize: true }],
   milestones: [{ id: "m1", date: "2023-02-14", title: "t", body: "b", photos: [validAsset] }],
   reasons: [{ id: "r1", order: 1, text: "x" }],
@@ -56,6 +57,7 @@ const baseContent = {
   },
   song: { src: "/s.mp3", title: "t", artist: "a", ambientSrc: "/a.mp3" },
   finale: {
+    label: "f",
     thesisLine: "t",
     ascendingPhotos: [validAsset],
     promise: { frameLabel: "f", pendingDate: "", pendingLabel: "p", note: "n" },
