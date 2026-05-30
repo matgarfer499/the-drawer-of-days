@@ -12,7 +12,17 @@ const deck = tv({
     hub: "z-10 h-3.5 w-3.5 rounded-full bg-aged-tan/70",
     glow: "pointer-events-none absolute -inset-1 rounded-full bg-golden-hour/60 blur-md",
   },
+  variants: {
+    // each spoke's fixed angle — the three together make a six-pointed reel star
+    angle: {
+      "0": { spoke: "rotate-0" },
+      "60": { spoke: "rotate-[60deg]" },
+      "120": { spoke: "rotate-[120deg]" },
+    },
+  },
 });
+
+const SPOKE_ANGLES = ["0", "60", "120"] as const;
 
 interface CassetteDeckProps {
   /** drives reel spin; omit (reduced motion) for still reels */
@@ -30,6 +40,7 @@ interface CassetteDeckProps {
  */
 export function CassetteDeck({ rotate, glow }: CassetteDeckProps) {
   const { root, window: windowSlot, reel, spokes, spoke, hub, glow: glowSlot } = deck();
+  const bars = SPOKE_ANGLES.map((angle) => <span key={angle} className={spoke({ angle })} />);
   return (
     <div className={root()} aria-hidden="true">
       <span className={windowSlot()} />
@@ -38,16 +49,10 @@ export function CassetteDeck({ rotate, glow }: CassetteDeckProps) {
           {glow ? <motion.span className={glowSlot()} style={{ opacity: glow }} /> : null}
           {rotate ? (
             <motion.span className={spokes()} style={{ rotate }}>
-              <span className={`${spoke()} rotate-0`} />
-              <span className={`${spoke()} rotate-[60deg]`} />
-              <span className={`${spoke()} rotate-[120deg]`} />
+              {bars}
             </motion.span>
           ) : (
-            <span className={spokes()}>
-              <span className={`${spoke()} rotate-0`} />
-              <span className={`${spoke()} rotate-[60deg]`} />
-              <span className={`${spoke()} rotate-[120deg]`} />
-            </span>
+            <span className={spokes()}>{bars}</span>
           )}
           <span className={hub()} />
         </span>
