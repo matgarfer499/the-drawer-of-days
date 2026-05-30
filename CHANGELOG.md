@@ -5,6 +5,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- **Phase 9 — Polish (a11y / perf / responsive / QA):** a holistic pass over the whole app. Haptics — a
+  guarded `vibrate()` (test-driven, no-ops without support) buzzes at the tactile beats (door, ribbon untie,
+  opening a keepsake, the secret finale). A global `prefers-reduced-motion` CSS safety net neutralises any
+  stray animation on top of each scene's own fallback. Accessibility, from a multi-lens audit: every scene
+  now exposes its own `<h1>` (no more skipped levels or headingless entry screens), the scene region is a
+  `<main>` landmark, the mute control no longer double-announces state, and a completed constellation's name
+  is spoken (its drawn line is decorative). Content: scene titles/taglines and the finale label move into
+  `@content` (no more inline literals) and the unused `herName` slot is dropped. Responsive: cassette panels
+  and the finale column scroll inside themselves on short/landscape phones instead of clipping, and hub
+  keepsakes keep clear of the bottom controls. `index.html` gains a description and theme-color. Font subsets
+  are already `unicode-range`-gated (only latin downloads), so no trim was needed; lazy-loading the morphing
+  spoke scenes was deferred (it would risk the unverifiable `layoutId` morph for a modest saving — the heavy
+  WebGL chunk is already split). 159 tests.
+
 ### Added
 
 - **Phase 8 — The double-bottom finale (R3F + song):** the secret compartment. Our polaroids lift into the
