@@ -44,7 +44,8 @@ export function nearestTrack(progress: number, count: number): number {
 }
 
 const RATE_SCALE = 1;
-const RATE_MAX = 2.5;
+/** The fastest the tape ever plays — also normalises the reel "whirr" glow. */
+export const CASSETTE_RATE_MAX = 2.5;
 
 /**
  * The cassette playback rate for a scrub `velocity` (whole-track progress per
@@ -53,5 +54,5 @@ const RATE_MAX = 2.5;
  * straight into `AudioEngine.rate()`.
  */
 export function cassetteRate(velocity: number): number {
-  return clamp(1 + Math.abs(velocity) * RATE_SCALE, 1, RATE_MAX);
+  return clamp(1 + Math.abs(velocity) * RATE_SCALE, 1, CASSETTE_RATE_MAX);
 }

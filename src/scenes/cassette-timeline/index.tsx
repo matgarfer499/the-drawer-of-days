@@ -1,15 +1,134 @@
+import { content } from "@content";
+import { useReducedMotion } from "@features/reduced-motion";
+import { Polaroid } from "@shared/ui/Polaroid";
+import { PostmarkDate } from "@shared/ui/PostmarkDate";
 import { SceneFrame } from "@shared/ui/SceneFrame";
+import { useMotionValue, useMotionValueEvent, useScroll, useTransform } from "motion/react";
+import { useRef, useState } from "react";
+import { tv } from "tailwind-variants";
+import { CASSETTE_RATE_MAX, cassetteRate, formatPostmark, nearestTrack } from "./cassette";
+import { CassetteDeck } from "./components/CassetteDeck";
 
-/** Placeholder for the cassette timeline — built in phase 5. */
+/** Full turns the reels make across the whole tape — pure spin feel. */
+const REEL_TURNS = 6;
+
+const ui = tv({
+  slots: {
+    root: "flex h-full w-full max-w-md flex-col items-center gap-3 py-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))]",
+    title: "font-display text-3xl text-ink-sepia",
+    subtitle: "-mt-1 font-hand text-xl text-faded-rose",
+    track:
+      "flex w-full flex-1 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+    panel: "flex w-full shrink-0 snap-center flex-col items-center justify-center gap-2.5 px-1",
+    side: "rounded bg-kraft-tan/70 px-2 py-0.5 font-body text-stamp uppercase tracking-[0.2em] text-faded-ink",
+    milestoneTitle: "font-display text-2xl text-ink-sepia",
+    body: "max-w-[30ch] font-body text-sm leading-relaxed text-faded-ink",
+    dots: "flex items-center justify-center gap-1",
+    dot: "grid h-11 w-11 place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
+    dotInner: "h-2.5 w-2.5 rounded-full bg-aged-tan/50 transition-transform",
+  },
+  variants: {
+    smooth: { true: { track: "scroll-smooth" }, false: {} },
+    active: { true: { dotInner: "scale-150 bg-faded-rose" }, false: {} },
+  },
+  defaultVariants: { smooth: true, active: false },
+});
+
+/**
+ * The cassette timeline. The milestones live on a horizontal, scroll-snapped
+ * tape you swipe through; the reels spin with the scroll and whirr gold the
+ * faster you scrub (the same rate phase 8 will feed the audio). Under reduced
+ * motion the reels rest still and the snap jumps instead of glides — the tape is
+ * still fully navigable by swipe or by the dots. Keeps `spoke-timeline` so it
+ * morphs from (and back to) its hub keepsake.
+ */
 export function CassetteTimeline() {
+  const reduced = useReducedMotion();
+  const milestones = content.milestones;
+  const trackRef = useRef<HTMLDivElement>(null);
+  const panelRefs = useRef<(HTMLElement | null)[]>([]);
+  const [active, setActive] = useState(0);
+
+  const { scrollXProgress } = useScroll({ container: trackRef, axis: "x" });
+  const rotate = useTransform(scrollXProgress, [0, 1], [0, REEL_TURNS * 360], { clamp: false });
+  const glow = useMotionValue(0);
+
+  useMotionValueEvent(scrollXProgress, "change", (progress) => {
+    setActive(nearestTrack(progress, milestones.length));
+    // scrub speed → cassette playback rate. TODO(phase 8): feed this same value
+    // into AudioEngine.rate() so the tape pitches up as she scrubs the swipe.
+    if (!reduced) {
+      const rate = cassetteRate(scrollXProgress.getVelocity());
+      glow.set((rate - 1) / (CASSETTE_RATE_MAX - 1));
+    }
+  });
+
+  const goTo = (index: number) => {
+    panelRefs.current[index]?.scrollIntoView({
+      behavior: reduced ? "auto" : "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+  };
+
+  const s = ui({ smooth: !reduced });
+
   return (
     <SceneFrame morphId="spoke-timeline">
-      <div className="flex flex-col items-center gap-2">
-        <h2 className="font-display text-4xl text-ink-sepia">La cinta</h2>
-        <p className="font-hand text-2xl text-faded-rose">nuestra historia</p>
-        <p className="mt-6 text-xs uppercase tracking-[0.2em] text-faded-ink">
-          placeholder · fase 5
-        </p>
+      <div className={s.root()}>
+        <h2 className={s.title()}>La cinta</h2>
+        <p className={s.subtitle()}>nuestra historia, lado a lado</p>
+
+        <CassetteDeck {...(reduced ? {} : { rotate, glow })} />
+
+        <section
+          ref={trackRef}
+          className={s.track()}
+          aria-roledescription="carrusel"
+          aria-label="La cinta: desliza para recorrer los recuerdos"
+        >
+          {milestones.map((milestone, index) => {
+            const photo = milestone.photos[0];
+            return (
+              <article
+                key={milestone.id}
+                ref={(el) => {
+                  panelRefs.current[index] = el;
+                }}
+                className={s.panel()}
+                aria-roledescription="recuerdo"
+                aria-label={`${index + 1} de ${milestones.length}: ${milestone.title}`}
+              >
+                <span className={s.side()}>Cara {milestone.side}</span>
+                {photo ? (
+                  <Polaroid id={milestone.id} src={photo.src} alt={photo.alt} size="md" />
+                ) : null}
+                <PostmarkDate
+                  id={`pm-${milestone.id}`}
+                  date={formatPostmark(milestone.date)}
+                  dateTime={milestone.date}
+                />
+                <h3 className={s.milestoneTitle()}>{milestone.title}</h3>
+                <p className={s.body()}>{milestone.body}</p>
+              </article>
+            );
+          })}
+        </section>
+
+        <nav className={s.dots()} aria-label="Saltar a un recuerdo">
+          {milestones.map((milestone, index) => (
+            <button
+              key={milestone.id}
+              type="button"
+              className={s.dot()}
+              aria-label={`Ir a: ${milestone.title}`}
+              aria-current={active === index}
+              onClick={() => goTo(index)}
+            >
+              <span className={s.dotInner({ active: active === index })} />
+            </button>
+          ))}
+        </nav>
       </div>
     </SceneFrame>
   );
