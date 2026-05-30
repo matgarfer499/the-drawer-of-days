@@ -32,6 +32,7 @@ const SONG_VOLUME = 0.8;
 class AudioEngine {
   private ambient: Howl | null = null;
   private song: Howl | null = null;
+  private finaleStarted = false;
   private muted = false;
 
   /** Resume the audio context — must run inside a user gesture (the box opening). */
@@ -50,14 +51,18 @@ class AudioEngine {
     this.ambient.fade(0, AMBIENT_VOLUME, 1200);
   }
 
-  /** The finale: fade the ambient down and let the song lead. No-op without the asset. */
+  /**
+   * The finale: fade the ambient down and let the song lead — ONCE. The finale is
+   * re-entrable (browser back/forward), and the song must never restart from the
+   * top, so the whole handover is guarded. No-op without the asset.
+   */
   enterFinale(contentPath: string): void {
+    if (this.finaleStarted) return;
+    this.finaleStarted = true;
     if (this.ambient) this.ambient.fade(this.ambient.volume(), 0, 1500);
     const src = resolveAudioSrc(contentPath, byBasename);
     if (!src) return;
-    if (!this.song) {
-      this.song = new Howl({ src: [src], html5: true, volume: 0, onloaderror: () => {} });
-    }
+    this.song = new Howl({ src: [src], html5: true, volume: 0, onloaderror: () => {} });
     this.song.play();
     this.song.fade(0, SONG_VOLUME, 2000);
   }

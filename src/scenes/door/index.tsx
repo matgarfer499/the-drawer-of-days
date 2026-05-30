@@ -1,4 +1,5 @@
 import { content } from "@content";
+import { audioEngine } from "@features/audio";
 import { useReducedMotion } from "@features/reduced-motion";
 import { useExperienceStore } from "@features/scene-engine";
 import { SceneFrame } from "@shared/ui/SceneFrame";
@@ -16,20 +17,25 @@ const door = tv({
 });
 
 /**
- * The soft door — "this is for you". A single tap enters, which also unlocks the
- * audio (the reducer flips audioUnlocked on ENTER, satisfying the browser's
- * gesture requirement). Greeting comes from @content; no page chrome.
+ * The soft door — "this is for you". A single tap enters and resumes the audio
+ * context *synchronously inside the gesture* (autoplay-policy safe); the reducer
+ * also flips audioUnlocked, which starts the ambient loop. Greeting comes from
+ * @content; no page chrome.
  */
 export function Door() {
   const enter = useExperienceStore((state) => state.enter);
   const reduced = useReducedMotion();
   const { button, greeting, hint } = door();
+  const handleEnter = () => {
+    audioEngine.unlock();
+    enter();
+  };
   return (
     <SceneFrame>
       <motion.button
         type="button"
         className={button()}
-        onClick={enter}
+        onClick={handleEnter}
         whileTap={reduced ? {} : { scale: 0.98 }}
       >
         <span className={greeting()}>{content.opening.greetingLine}</span>
