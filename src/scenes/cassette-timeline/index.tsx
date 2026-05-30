@@ -1,4 +1,5 @@
 import { content } from "@content";
+import { audioEngine } from "@features/audio";
 import { useReducedMotion } from "@features/reduced-motion";
 import { Polaroid } from "@shared/ui/Polaroid";
 import { PostmarkDate } from "@shared/ui/PostmarkDate";
@@ -52,13 +53,17 @@ export function CassetteTimeline() {
   const { scrollXProgress } = useScroll({ container: trackRef, axis: "x" });
   const rotate = useTransform(scrollXProgress, [0, 1], [0, REEL_TURNS * 360], { clamp: false });
   // The scrub speed (whole-track progress/sec) becomes the cassette rate. useVelocity
-  // settles back to 0 on its own, so the reel "whirr" glow fades when she stops — and
-  // TODO(phase 8): feed `scrubRate` straight into AudioEngine.rate() to pitch the tape.
+  // settles back to 0 on its own, so the reel "whirr" glow fades when she stops.
   const scrubRate = useTransform(useVelocity(scrollXProgress), (v) => cassetteRate(v));
   const glow = useTransform(scrubRate, (r) => (r - 1) / (CASSETTE_RATE_MAX - 1));
 
   useMotionValueEvent(scrollXProgress, "change", (progress) => {
     setActive(nearestTrack(progress, milestones.length));
+  });
+
+  // pitch the tape with the swipe (silent until the ambient asset is bundled)
+  useMotionValueEvent(scrubRate, "change", (rate) => {
+    audioEngine.setCassetteRate(rate);
   });
 
   const goTo = (index: number) => {
