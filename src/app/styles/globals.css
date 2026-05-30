@@ -27,3 +27,19 @@ body {
 #root {
   overflow: hidden;
 }
+
+/*
+ * Safety net: every scene already declares its own reduced-motion fallback, but
+ * this guarantees no CSS animation/transition/smooth-scroll slips through for
+ * users who ask for less motion.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
