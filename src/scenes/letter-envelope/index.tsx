@@ -21,10 +21,18 @@ const ui = tv({
     pendingLine: "h-px flex-1 border-aged-tan/60 border-t border-dashed",
     controls: "flex flex-col items-center gap-1",
     pullBtn:
-      "flex min-h-11 items-center gap-3 rounded-full bg-paper-cream px-4 py-2 shadow-paper transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-rose-deep focus-visible:outline-offset-2 disabled:opacity-50 disabled:hover:scale-100",
+      "flex min-h-11 items-center gap-3 rounded-full bg-paper-cream px-4 py-2 shadow-paper transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-rose-deep focus-visible:outline-offset-2",
     pullLabel: "font-hand text-xl text-rose-deep",
-    hint: "inline-flex min-h-11 items-center text-faded-ink text-xs uppercase tracking-[0.2em]",
+    hint: "min-h-6 text-faded-ink text-xs uppercase tracking-[0.2em]",
   },
+  variants: {
+    // the envelope is empty: dim it but keep it focusable (aria-disabled, not disabled)
+    spent: {
+      true: { pullBtn: "cursor-default opacity-50 hover:scale-100" },
+      false: {},
+    },
+  },
+  defaultVariants: { spent: false },
 });
 
 const sceneLabel = (scene: string): string =>
@@ -68,7 +76,7 @@ export function LetterEnvelope() {
   const [pulled, setPulled] = useState(0);
 
   const view = composeLetter(content.reasons, unlockedReasons, pulled);
-  const s = ui();
+  const s = ui({ spent: view.remaining === 0 });
 
   return (
     <SceneFrame morphId="spoke-letter">
@@ -105,22 +113,28 @@ export function LetterEnvelope() {
           <button
             type="button"
             className={s.pullBtn()}
-            onClick={() => setPulled((p) => Math.min(p + 1, view.availableCount))}
-            disabled={view.remaining === 0}
+            onClick={() => {
+              if (view.remaining === 0) return;
+              setPulled((p) => Math.min(p + 1, view.availableCount));
+            }}
+            aria-disabled={view.remaining === 0}
             aria-label={
-              view.remaining > 0 ? "Saca otra razón del sobre" : "No quedan más razones por ahora"
+              view.remaining > 0 ? "Saca otra razón del sobre" : "Ya no quedan razones por sacar"
             }
           >
             <Envelope />
             <span aria-hidden="true" className={s.pullLabel()}>
-              {view.remaining > 0 ? "saca otra razón" : "…"}
+              {view.remaining > 0 ? "saca otra razón" : "ya está"}
             </span>
           </button>
-          {view.remaining === 0 ? (
-            <p className={s.hint()}>
-              {view.pendingCount > 0 ? "la carta crecerá según explores" : "ya están todas"}
-            </p>
-          ) : null}
+          {/* a persistent polite live region: announces the end state when it appears */}
+          <p role="status" className={s.hint()}>
+            {view.remaining > 0
+              ? ""
+              : view.pendingCount > 0
+                ? "la carta crecerá según explores"
+                : "ya están todas"}
+          </p>
         </div>
       </div>
     </SceneFrame>
