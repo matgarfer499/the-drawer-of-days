@@ -2,6 +2,7 @@ import { content } from "@content";
 import { audioEngine } from "@features/audio";
 import { useReducedMotion } from "@features/reduced-motion";
 import { useExperienceStore } from "@features/scene-engine";
+import { vibrate } from "@shared/lib/haptics";
 import { SceneFrame } from "@shared/ui/SceneFrame";
 import { motion } from "motion/react";
 import { tv } from "tailwind-variants";
@@ -27,6 +28,7 @@ export function Door() {
   const reduced = useReducedMotion();
   const { button, greeting, hint } = door();
   const handleEnter = () => {
+    vibrate(10);
     audioEngine.unlock();
     enter();
   };

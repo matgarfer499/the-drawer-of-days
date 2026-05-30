@@ -1,6 +1,7 @@
 import { content } from "@content";
 import { useReducedMotion } from "@features/reduced-motion";
 import { useExperienceStore } from "@features/scene-engine";
+import { vibrate } from "@shared/lib/haptics";
 import { SceneFrame } from "@shared/ui/SceneFrame";
 import { motion } from "motion/react";
 import { tv } from "tailwind-variants";
@@ -29,6 +30,10 @@ export function SealedBox() {
   const openBox = useExperienceStore((state) => state.openBox);
   const reduced = useReducedMotion();
   const { wrap, box, bandV, bandH, halo, knot, label, hint } = seal();
+  const open = () => {
+    vibrate([12, 24, 12]); // the little "untie" flutter
+    openBox();
+  };
   return (
     <SceneFrame>
       <div className={wrap()}>
@@ -40,7 +45,7 @@ export function SealedBox() {
             <motion.button
               type="button"
               className={knot()}
-              onClick={openBox}
+              onClick={open}
               drag
               dragSnapToOrigin
               dragElastic={0.5}
@@ -50,7 +55,7 @@ export function SealedBox() {
                 // radial magnitude so a pull in ANY direction counts (the bow drags freely)
                 const offset = Math.hypot(info.offset.x, info.offset.y);
                 const velocity = Math.hypot(info.velocity.x, info.velocity.y);
-                if (shouldOpenFromDrag({ offset, velocity })) openBox();
+                if (shouldOpenFromDrag({ offset, velocity })) open();
               }}
             >
               tira del lazo

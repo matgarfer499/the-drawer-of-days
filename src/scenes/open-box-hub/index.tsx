@@ -1,6 +1,7 @@
 import { content } from "@content";
 import { useReducedMotion } from "@features/reduced-motion";
 import { useExperienceStore } from "@features/scene-engine";
+import { vibrate } from "@shared/lib/haptics";
 import { SceneFrame } from "@shared/ui/SceneFrame";
 import { StampPin } from "@shared/ui/StampPin";
 import { ThreadLine } from "@shared/ui/ThreadLine";
@@ -99,7 +100,10 @@ export function Hub() {
                 type="button"
                 className={slots.button()}
                 style={hubPositionVars(point)}
-                onClick={() => enterScene(object.scene)}
+                onClick={() => {
+                  vibrate(8);
+                  enterScene(object.scene);
+                }}
                 whileHover={reduced ? {} : { scale: 1.06 }}
                 whileTap={reduced ? {} : { scale: 0.97 }}
               >
@@ -135,7 +139,14 @@ export function Hub() {
 
         <div className={controls()}>
           {finaleUnlocked && (
-            <button type="button" className={secret()} onClick={enterFinale}>
+            <button
+              type="button"
+              className={secret()}
+              onClick={() => {
+                vibrate([20, 40, 20, 40, 60]); // a little fanfare for the secret
+                enterFinale();
+              }}
+            >
               abrir el doble fondo
             </button>
           )}
