@@ -14,8 +14,11 @@ const frame = tv({
       paper: { section: "bg-paper-cream text-ink-sepia", hero: "bg-kraft-tan/30 shadow-paper" },
       night: { section: "bg-night-paper text-silver-pen", hero: "bg-silver-pen/10 shadow-paper" },
     },
+    // drop the surface so a persistent layer behind it (the finale's WebGL sky)
+    // shows through; keeps the tone's text colour
+    bare: { true: { section: "bg-transparent" }, false: {} },
   },
-  defaultVariants: { tone: "paper" },
+  defaultVariants: { tone: "paper", bare: false },
 });
 
 interface SceneFrameProps {
@@ -23,6 +26,8 @@ interface SceneFrameProps {
   tone?: "paper" | "night";
   /** shared-layout id: the hub keepsake with the same id morphs into this hero */
   morphId?: string;
+  /** make the surface transparent so a layer behind it shows through */
+  bare?: boolean;
 }
 
 /**
@@ -32,9 +37,9 @@ interface SceneFrameProps {
  * (and shrinks back to on close) — the shared-element morph. Reduced motion drops
  * the morph entirely.
  */
-export function SceneFrame({ children, tone = "paper", morphId }: SceneFrameProps) {
+export function SceneFrame({ children, tone = "paper", morphId, bare = false }: SceneFrameProps) {
   const reduced = useReducedMotion();
-  const { section, hero } = frame({ tone });
+  const { section, hero } = frame({ tone, bare });
   const motionProps = reduced
     ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
     : {

@@ -40,7 +40,7 @@ export function Finale() {
   const s = ui();
 
   return (
-    <SceneFrame tone="night">
+    <SceneFrame tone="night" bare={!reduced}>
       <div className={s.root()}>
         <div className={s.photos()}>
           {ascendingPhotos.map((photo, i) => {

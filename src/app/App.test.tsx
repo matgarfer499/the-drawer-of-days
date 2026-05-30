@@ -21,6 +21,10 @@ vi.mock("motion/react", async (importOriginal) => {
   return { ...actual, AnimatePresence: ({ children }: { children: ReactNode }) => children };
 });
 
+// The finale's WebGL sky can't run in happy-dom (no GL context); this test is
+// about routing/store wiring, so stub the lazy canvas out.
+vi.mock("@scenes/finale-double-bottom/FinaleSky", () => ({ default: () => null }));
+
 const openHub = async () => {
   fireEvent.click(screen.getByText("toca para entrar"));
   fireEvent.click(await screen.findByText("tira del lazo"));
