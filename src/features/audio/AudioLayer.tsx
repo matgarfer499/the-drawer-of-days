@@ -20,7 +20,6 @@ export function AudioLayer() {
       type="button"
       className={control()}
       onClick={toggleMuted}
-      aria-pressed={muted}
       aria-label={muted ? "Activar el sonido" : "Silenciar"}
     >
       <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5">

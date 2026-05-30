@@ -62,7 +62,7 @@ export function SealedBox() {
             </motion.button>
           </span>
         </div>
-        <span className={label()}>{content.opening.subGreetingLine}</span>
+        <h1 className={label()}>{content.opening.subGreetingLine}</h1>
         <span className={hint()}>o tócalo</span>
       </div>
     </SceneFrame>

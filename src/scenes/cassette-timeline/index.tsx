@@ -20,7 +20,8 @@ const ui = tv({
     subtitle: "-mt-1 font-hand text-2xl text-faded-rose",
     track:
       "flex w-full flex-1 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
-    panel: "flex w-full shrink-0 snap-center flex-col items-center justify-center gap-2.5 px-1",
+    panel:
+      "flex w-full shrink-0 snap-center flex-col items-center justify-center gap-2.5 overflow-y-auto overscroll-y-contain px-1",
     side: "rounded bg-kraft-tan/70 px-2 py-0.5 font-body text-stamp uppercase tracking-[0.2em] text-ink-sepia",
     milestoneTitle: "font-display text-2xl text-ink-sepia",
     body: "max-w-[30ch] font-body text-sm leading-relaxed text-faded-ink",
@@ -79,8 +80,8 @@ export function CassetteTimeline() {
   return (
     <SceneFrame morphId="spoke-timeline">
       <div className={s.root()}>
-        <h2 className={s.title()}>La cinta</h2>
-        <p className={s.subtitle()}>nuestra historia, lado a lado</p>
+        <h1 className={s.title()}>{content.scenes.timeline.title}</h1>
+        <p className={s.subtitle()}>{content.scenes.timeline.tagline}</p>
 
         <CassetteDeck {...(reduced ? {} : { rotate, glow })} />
 
@@ -106,14 +107,14 @@ export function CassetteTimeline() {
               >
                 <span className={s.side()}>Cara {milestone.side}</span>
                 {photo ? (
-                  <Polaroid id={milestone.id} src={photo.src} alt={photo.alt} size="md" />
+                  <Polaroid id={milestone.id} src={photo.src} alt={photo.alt} size="sm" />
                 ) : null}
                 <PostmarkDate
                   id={`pm-${milestone.id}`}
                   date={formatPostmark(milestone.date)}
                   dateTime={milestone.date}
                 />
-                <h3 className={s.milestoneTitle()}>{milestone.title}</h3>
+                <h2 className={s.milestoneTitle()}>{milestone.title}</h2>
                 <p className={s.body()}>{milestone.body}</p>
               </article>
             );

@@ -81,8 +81,8 @@ export function LetterEnvelope() {
   return (
     <SceneFrame morphId="spoke-letter">
       <div className={s.root()}>
-        <h2 className={s.title()}>El sobre</h2>
-        <p className={s.subtitle()}>razones por las que te quiero</p>
+        <h1 className={s.title()}>{content.scenes.letter.title}</h1>
+        <p className={s.subtitle()}>{content.scenes.letter.tagline}</p>
 
         <PaperFrame tone="cream" elevation="lifted" padding="lg" className={s.sheet()}>
           <ul className={s.list()} aria-live="polite" aria-relevant="additions">

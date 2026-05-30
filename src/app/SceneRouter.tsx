@@ -47,10 +47,10 @@ export function SceneRouter() {
   }
 
   return (
-    <div className="relative h-[100dvh] w-[100dvw] overflow-hidden">
+    <main className="relative h-[100dvh] w-[100dvw] overflow-hidden">
       <LayoutGroup>
         <AnimatePresence mode="wait">{view}</AnimatePresence>
       </LayoutGroup>
-    </div>
+    </main>
   );
 }

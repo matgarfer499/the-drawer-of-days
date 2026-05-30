@@ -6,14 +6,14 @@ import { tv } from "tailwind-variants";
 import { ascendingLayout } from "./ascending";
 import { AscendingPhoto } from "./components/AscendingPhoto";
 
-const { thesisLine, ascendingPhotos, promise } = content.finale;
+const { label, thesisLine, ascendingPhotos, promise } = content.finale;
 
 const ui = tv({
   slots: {
     root: "absolute inset-0 h-full w-full overflow-hidden",
     photos: "pointer-events-none absolute inset-0",
     center:
-      "absolute inset-x-0 top-1/2 z-10 flex -translate-y-1/2 flex-col items-center gap-6 px-8 text-center",
+      "absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 overflow-y-auto overscroll-contain px-8 py-[max(1rem,env(safe-area-inset-top))] text-center",
     eyebrow: "font-body text-silver-pen/75 text-xs uppercase tracking-[0.3em]",
     thesis:
       "max-w-md font-display text-2xl text-silver-pen leading-snug [text-shadow:0_0_20px_var(--color-golden-hour)]",
@@ -44,15 +44,15 @@ export function Finale() {
       <div className={s.root()}>
         {/* heading first in the DOM so AT reaches the thesis before the photos */}
         <div className={s.center()}>
-          <p className={s.eyebrow()}>El doble fondo</p>
-          <motion.h2
+          <p className={s.eyebrow()}>{label}</p>
+          <motion.h1
             className={s.thesis()}
             initial={reduced ? false : { opacity: 0, y: 12, filter: "blur(6px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ delay: reduced ? 0 : 0.4, duration: 1.1, ease: "easeOut" }}
           >
             {thesisLine}
-          </motion.h2>
+          </motion.h1>
 
           <div className={s.promise()}>
             <div className={s.frame()}>

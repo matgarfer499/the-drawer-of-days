@@ -34,15 +34,19 @@ export function Door() {
   };
   return (
     <SceneFrame>
-      <motion.button
-        type="button"
-        className={button()}
-        onClick={handleEnter}
-        whileTap={reduced ? {} : { scale: 0.98 }}
-      >
-        <span className={greeting()}>{content.opening.greetingLine}</span>
-        <span className={hint()}>toca para entrar</span>
-      </motion.button>
+      {/* h1 wraps the button (button is phrasing content) so the entry screen has
+          a heading without shrinking the full-screen tap target */}
+      <h1 className="contents">
+        <motion.button
+          type="button"
+          className={button()}
+          onClick={handleEnter}
+          whileTap={reduced ? {} : { scale: 0.98 }}
+        >
+          <span className={greeting()}>{content.opening.greetingLine}</span>
+          <span className={hint()}>toca para entrar</span>
+        </motion.button>
+      </h1>
     </SceneFrame>
   );
 }

@@ -19,7 +19,8 @@ export function hubLayout(count: number, seed = 0): HubPoint[] {
   if (count <= 0) return [];
   const rng = mulberry32(seed >>> 0);
   const top = 14;
-  const bottom = 84;
+  // keep keepsakes clear of the bottom controls (finale gate / tour)
+  const bottom = 76;
   const center = 50;
   const amplitude = 20;
   const jitter = 5;

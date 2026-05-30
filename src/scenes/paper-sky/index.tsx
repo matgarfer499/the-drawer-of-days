@@ -62,8 +62,8 @@ export function PaperSky() {
     <SceneFrame tone="night" morphId="spoke-sky">
       <div className={s.root()}>
         <header className={s.header()}>
-          <h2 className={s.title()}>El cielo de papel</h2>
-          <p className={s.hint()}>toca las estrellas de nuestros lugares</p>
+          <h1 className={s.title()}>{content.scenes.sky.title}</h1>
+          <p className={s.hint()}>{content.scenes.sky.tagline}</p>
         </header>
 
         {/* constellation lines, drawn once all their stars are lit */}
@@ -115,6 +115,10 @@ export function PaperSky() {
         </p>
         <p role="status" className={s.announce()}>
           {selectedNode ? selectedNode.label : ""}
+        </p>
+        {/* the drawn lines are aria-hidden, so name each completed constellation here */}
+        <p role="status" className={s.announce()}>
+          {progress.completed.map((constellation) => constellation.name).join(", ")}
         </p>
 
         <AnimatePresence mode="wait">
