@@ -58,7 +58,7 @@ const baseContent = {
   finale: {
     thesisLine: "t",
     ascendingPhotos: [validAsset],
-    promise: { frameLabel: "f", pendingDate: "", note: "n" },
+    promise: { frameLabel: "f", pendingDate: "", pendingLabel: "p", note: "n" },
   },
 };
 
@@ -72,7 +72,7 @@ describe("contentSchema integrity", () => {
       ...baseContent,
       finale: {
         ...baseContent.finale,
-        promise: { frameLabel: "f", pendingDate: "2099-01-01", note: "n" },
+        promise: { frameLabel: "f", pendingDate: "2099-01-01", pendingLabel: "p", note: "n" },
       },
     };
     expect(contentSchema.safeParse(broken).success).toBe(false);

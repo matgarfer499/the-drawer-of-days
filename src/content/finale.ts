@@ -16,6 +16,7 @@ export const finale: Finale = {
   promise: {
     frameLabel: "nuestro próximo capítulo",
     pendingDate: "",
+    pendingLabel: "— por escribir —",
     note: "Aquí dejamos un hueco a propósito. Lo llenamos nosotros.",
   },
 };

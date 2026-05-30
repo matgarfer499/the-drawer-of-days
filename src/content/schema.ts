@@ -108,6 +108,8 @@ const promiseSchema = z.object({
   frameLabel: z.string().min(1),
   /** intentionally empty — the promise is the blank still to be filled */
   pendingDate: z.literal(""),
+  /** what stands in for the empty date in the frame, e.g. "— por escribir —" */
+  pendingLabel: z.string().min(1),
   note: z.string().min(1),
 });
 
