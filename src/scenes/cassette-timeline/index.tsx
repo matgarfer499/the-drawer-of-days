@@ -3,7 +3,7 @@ import { useReducedMotion } from "@features/reduced-motion";
 import { Polaroid } from "@shared/ui/Polaroid";
 import { PostmarkDate } from "@shared/ui/PostmarkDate";
 import { SceneFrame } from "@shared/ui/SceneFrame";
-import { useMotionValue, useMotionValueEvent, useScroll, useTransform } from "motion/react";
+import { useMotionValueEvent, useScroll, useTransform, useVelocity } from "motion/react";
 import { useRef, useState } from "react";
 import { tv } from "tailwind-variants";
 import { CASSETTE_RATE_MAX, cassetteRate, formatPostmark, nearestTrack } from "./cassette";
@@ -16,16 +16,16 @@ const ui = tv({
   slots: {
     root: "flex h-full w-full max-w-md flex-col items-center gap-3 py-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))]",
     title: "font-display text-3xl text-ink-sepia",
-    subtitle: "-mt-1 font-hand text-xl text-faded-rose",
+    subtitle: "-mt-1 font-hand text-2xl text-faded-rose",
     track:
       "flex w-full flex-1 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
     panel: "flex w-full shrink-0 snap-center flex-col items-center justify-center gap-2.5 px-1",
-    side: "rounded bg-kraft-tan/70 px-2 py-0.5 font-body text-stamp uppercase tracking-[0.2em] text-faded-ink",
+    side: "rounded bg-kraft-tan/70 px-2 py-0.5 font-body text-stamp uppercase tracking-[0.2em] text-ink-sepia",
     milestoneTitle: "font-display text-2xl text-ink-sepia",
     body: "max-w-[30ch] font-body text-sm leading-relaxed text-faded-ink",
     dots: "flex items-center justify-center gap-1",
     dot: "grid h-11 w-11 place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
-    dotInner: "h-2.5 w-2.5 rounded-full bg-aged-tan/50 transition-transform",
+    dotInner: "h-2.5 w-2.5 rounded-full bg-aged-tan transition-transform",
   },
   variants: {
     smooth: { true: { track: "scroll-smooth" }, false: {} },
@@ -51,16 +51,14 @@ export function CassetteTimeline() {
 
   const { scrollXProgress } = useScroll({ container: trackRef, axis: "x" });
   const rotate = useTransform(scrollXProgress, [0, 1], [0, REEL_TURNS * 360], { clamp: false });
-  const glow = useMotionValue(0);
+  // The scrub speed (whole-track progress/sec) becomes the cassette rate. useVelocity
+  // settles back to 0 on its own, so the reel "whirr" glow fades when she stops — and
+  // TODO(phase 8): feed `scrubRate` straight into AudioEngine.rate() to pitch the tape.
+  const scrubRate = useTransform(useVelocity(scrollXProgress), (v) => cassetteRate(v));
+  const glow = useTransform(scrubRate, (r) => (r - 1) / (CASSETTE_RATE_MAX - 1));
 
   useMotionValueEvent(scrollXProgress, "change", (progress) => {
     setActive(nearestTrack(progress, milestones.length));
-    // scrub speed → cassette playback rate. TODO(phase 8): feed this same value
-    // into AudioEngine.rate() so the tape pitches up as she scrubs the swipe.
-    if (!reduced) {
-      const rate = cassetteRate(scrollXProgress.getVelocity());
-      glow.set((rate - 1) / (CASSETTE_RATE_MAX - 1));
-    }
   });
 
   const goTo = (index: number) => {
@@ -84,6 +82,8 @@ export function CassetteTimeline() {
         <section
           ref={trackRef}
           className={s.track()}
+          // biome-ignore lint/a11y/noNoninteractiveTabindex: a scrollable region must be keyboard-focusable so a keyboard user can arrow-scrub the tape (WCAG 2.1.1); the dots provide discrete nav alongside
+          tabIndex={0}
           aria-roledescription="carrusel"
           aria-label="La cinta: desliza para recorrer los recuerdos"
         >
