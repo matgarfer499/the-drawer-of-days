@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Phase 7 — The paper sky (playful 2D zone):** the placeholder becomes the constellation game.
+  `content.sky.nodes` are cut-out stars pinned to a night-paper ground by their coordinates; tapping a star
+  lights (or dims) it and emerges its photo as a polaroid. Light every star of a constellation and its line
+  is drawn (an SVG `polyline` traced with `pathLength`); light them all and the hidden `revealMessage` is
+  traced. Joining is forgiving by design — there is no wrong move and nothing is required (no frustrating
+  puzzle). The completion logic (`isConstellationComplete`, `skyProgress`, `constellationPoints`) is
+  test-driven. Reduced motion rests the twinkle and draws the lines/message statically. Keeps
+  `morphId="spoke-sky"`. Hardened by a multi-lens adversarial review (persistent `role="status"` live regions
+  announce the climax and each emerged place, the reveal overlay no longer blocks taps, and a lit star now
+  carries a filled-vs-outline non-colour cue). 144 tests.
 - **Phase 6 — The letter envelope (incremental letter):** the placeholder becomes the real sobre. Reasons
   from `content.reasons` are pulled out of a kraft envelope one at a time onto a letter that scrolls *inside*
   its `PaperFrame` (the page never scrolls). The letter writes itself: a reason tagged `unlockedBy` stays a
