@@ -19,12 +19,14 @@ const ui = tv({
     title: "font-display text-2xl text-silver-pen",
     hint: "font-hand text-xl text-silver-pen/70",
     lines: "pointer-events-none absolute inset-0 h-full w-full",
+    line: "fill-none stroke-silver-pen/70",
     field: "absolute inset-0",
     reveal:
-      "absolute inset-x-0 top-[38%] z-10 px-8 text-center font-display text-2xl text-silver-pen leading-snug [text-shadow:0_0_16px_var(--color-golden-hour)]",
+      "pointer-events-none absolute inset-x-0 top-[38%] z-10 px-8 text-center font-display text-2xl text-silver-pen leading-snug [text-shadow:0_0_16px_var(--color-golden-hour)]",
     detail:
       "absolute inset-x-0 bottom-[max(1rem,env(safe-area-inset-bottom))] z-10 flex flex-col items-center gap-2",
     detailLabel: "font-hand text-2xl text-silver-pen",
+    announce: "sr-only",
   },
 });
 
@@ -79,7 +81,7 @@ export function PaperSky() {
               <motion.polyline
                 key={constellation.id}
                 points={points}
-                className="fill-none stroke-silver-pen/70"
+                className={s.line()}
                 strokeWidth={1.5}
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -106,11 +108,14 @@ export function PaperSky() {
           ))}
         </div>
 
-        {progress.allComplete ? (
-          <p role="status" className={s.reveal()}>
-            {revealMessage}
-          </p>
-        ) : null}
+        {/* persistent live regions: reliably announce the climax + the emerged place
+            (a region inserted already-populated is announced inconsistently on iOS VO) */}
+        <p role="status" className={s.reveal()}>
+          {progress.allComplete ? revealMessage : ""}
+        </p>
+        <p role="status" className={s.announce()}>
+          {selectedNode ? selectedNode.label : ""}
+        </p>
 
         <AnimatePresence mode="wait">
           {selectedNode ? (

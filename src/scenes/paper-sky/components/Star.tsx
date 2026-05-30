@@ -46,8 +46,9 @@ export function Star({ label, x, y, lit, reduced, onToggle }: StarProps) {
       animate={reduced ? {} : lit ? { scale: [1, 1.3, 1] } : { scale: 1 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
+      {/* filled when lit, outline when dim — a non-colour cue for the toggle state */}
       <span aria-hidden="true" className={glyph()}>
-        ✦
+        {lit ? "✦" : "✧"}
       </span>
     </motion.button>
   );
