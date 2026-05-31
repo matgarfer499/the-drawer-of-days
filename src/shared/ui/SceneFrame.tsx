@@ -6,7 +6,7 @@ import { tv } from "tailwind-variants";
 const frame = tv({
   slots: {
     section:
-      "absolute inset-0 grid h-[100dvh] w-[100dvw] place-items-center overflow-hidden px-6 text-center",
+      "absolute inset-0 grid grid-cols-1 h-[100dvh] w-[100dvw] place-items-center overflow-hidden px-6 text-center",
     hero: "absolute inset-3 -z-10 rounded-[2rem]",
   },
   variants: {
