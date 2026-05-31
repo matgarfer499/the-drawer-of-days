@@ -45,7 +45,7 @@ const baseContent = {
   anniversaryDate: "2024-02-14",
   relationshipStartDate: "2021-02-14",
   seed: 1,
-  opening: { greetingLine: "g", subGreetingLine: "s" },
+  opening: { greetingLine: "g", subGreetingLine: "s", ribbonHint: "r", lidHint: "l" },
   scenes: { timeline: sceneCopy, letter: sceneCopy, sky: sceneCopy },
   hubObjects: [{ id: "h1", label: "l", scene: "timeline", art: validAsset, palmSize: true }],
   milestones: [{ id: "m1", date: "2023-02-14", title: "t", body: "b", photos: [validAsset] }],

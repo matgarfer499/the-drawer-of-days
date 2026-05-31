@@ -12,4 +12,6 @@ export const meta = {
 export const opening: Opening = {
   greetingLine: "Esto es para ti, mi amor.",
   subGreetingLine: "Tira del lazo, sin prisa.",
+  ribbonHint: "desliza para tirar del lazo",
+  lidHint: "desliza hacia arriba para abrir",
 };

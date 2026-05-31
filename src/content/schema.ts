@@ -32,6 +32,10 @@ const skyPositionSchema = z.object({
 export const openingSchema = z.object({
   greetingLine: z.string().min(1),
   subGreetingLine: z.string().min(1),
+  /** hint shown while the bow is still tied: pull the knot sideways */
+  ribbonHint: z.string().min(1),
+  /** hint shown once untied: lift the lid */
+  lidHint: z.string().min(1),
 });
 export type Opening = z.infer<typeof openingSchema>;
 
