@@ -4,7 +4,17 @@ import type { Sky } from "./schema";
 // TODO(contenido real): lugares/viajes como estrellas (label + foto opcional) y 1–3 constelaciones.
 export const sky: Sky = {
   nodes: [
-    { id: "home", label: "casa", position: { x: 30, y: 70 } },
+    {
+      id: "home",
+      label: "casa",
+      position: { x: 30, y: 70 },
+      media: placeholderImage({
+        width: 1000,
+        height: 1000,
+        label: "casa",
+        alt: "Marcador de casa",
+      }),
+    },
     {
       id: "beach",
       label: "la playa",
@@ -16,8 +26,28 @@ export const sky: Sky = {
         alt: "Marcador de la playa",
       }),
     },
-    { id: "mountains", label: "la montaña", position: { x: 48, y: 22 } },
-    { id: "city", label: "la ciudad", position: { x: 20, y: 38 } },
+    {
+      id: "mountains",
+      label: "la montaña",
+      position: { x: 48, y: 22 },
+      media: placeholderImage({
+        width: 1000,
+        height: 1000,
+        label: "la montaña",
+        alt: "Marcador de la montaña",
+      }),
+    },
+    {
+      id: "city",
+      label: "la ciudad",
+      position: { x: 20, y: 38 },
+      media: placeholderImage({
+        width: 1000,
+        height: 1000,
+        label: "la ciudad",
+        alt: "Marcador de la ciudad",
+      }),
+    },
   ],
   constellations: [
     { id: "our-places", name: "nuestros sitios", starIds: ["home", "beach", "mountains", "city"] },
