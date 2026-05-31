@@ -27,7 +27,9 @@ vi.mock("@scenes/finale-double-bottom/FinaleSky", () => ({ default: () => null }
 
 const openHub = async () => {
   fireEvent.click(screen.getByText("toca para entrar"));
-  fireEvent.click(await screen.findByText("tira del lazo"));
+  // the box opens via a two-phase pull/lift gesture; the keyboard path opens it
+  // directly (Enter on the knot), which is what we drive here
+  fireEvent.keyDown(await screen.findByLabelText(content.opening.ribbonHint), { key: "Enter" });
   return screen.findByText("El cajón de los días");
 };
 

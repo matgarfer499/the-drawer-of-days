@@ -16,9 +16,9 @@ describe("SealedBox", () => {
     expect(screen.getByText(content.opening.subGreetingLine)).toBeTruthy();
   });
 
-  it("pulling (or tapping) the ribbon opens the box", () => {
+  it("opens to the hub via the keyboard (Enter on the knot)", () => {
     render(<SealedBox />);
-    fireEvent.click(screen.getByText("tira del lazo"));
+    fireEvent.keyDown(screen.getByLabelText(content.opening.ribbonHint), { key: "Enter" });
     expect(useExperienceStore.getState().status).toBe("hub");
   });
 });
