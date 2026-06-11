@@ -7,6 +7,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- **Craft pass 2 — scrapbook spreads, no empty screens:** every scene now reads as a layered, handmade
+  spread. The paper sky becomes a full night scene (paper moon with craters, drifting hand-cut clouds,
+  torn-paper hills, fold creases, a wonky pencil frame, a pin-star field) with big cut-out paper stars and
+  constellations sewn in silver thread, stitch by stitch. The letter becomes a ruled page with a red margin
+  where each reason is dealt like a card — a torn scrap taped down askew — while locked reasons wait as
+  penciled-in ghosts, and the envelope grows into a kraft SVG whose flap folds open per pull around an
+  irregular wax seal. Timeline milestones compose as mirrored spreads (kraft sticker tag, washi-taped
+  polaroid with overlapping postmark, torn title scrap with a pencil-wave underline). The finale's
+  polaroids are pinned with golden tape into the upper band behind a ground-mist scrim so the thesis stays
+  clear, and the promise frame is hand-stitched in golden thread. New shared primitives: `PhotoCorner`
+  (album mounts), `Doodle` (pencil scribbles), `bg-ruled`; `ThreadLine` learns silver/golden tones and a
+  configurable draw delay. Door and hub gain lived-in pencil marks and photo mounts.
 - **Craft pass — visual, motion and typographic depth:** a redesign sweep over every surface, no
   architecture touched. Paper gains real substance: a pre-rasterized grain tile (`GrainOverlay`) films every
   scene and the tin/lid/cards, warm inset shadows sink the open box's interior, and a `shadow-tin` lip
