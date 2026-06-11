@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- **Craft pass — visual, motion and typographic depth:** a redesign sweep over every surface, no
+  architecture touched. Paper gains real substance: a pre-rasterized grain tile (`GrainOverlay`) films every
+  scene and the tin/lid/cards, warm inset shadows sink the open box's interior, and a `shadow-tin` lip
+  highlight makes the sealed tin read as metal-edged kraft. The hub becomes a true centrepiece — keepsakes
+  drop in and settle with a seeded spring cascade on first reveal, the red thread *sews itself* between the
+  two newest keepsakes (a mask sweep that preserves the stitch dashes), and the four keepsake icons become
+  detailed paper-cut stickers (cassette label + screws + tape sag, wax-seal heartbeat, a folded night-sky
+  map with a shooting star, steam still rising from the recetario). The sealed box's ribbon turns satin
+  (gradient sheen + glints that sway with the pull) and the dive-in gets cinematic vignette, golden bloom
+  and a lid that pivots as it lifts. Each scene now arrives with its own `SceneFrame` `flavor` (slide /
+  unfold / nightfall / flip) while reduced motion keeps the shared crossfade. Fraunces finally speaks its
+  variable axes via three voices — `type-poster` (WONK on; door, hub), `type-title` (scene headings) and
+  `type-tender` (finale thesis, sky reveal). The door becomes a tilted cover card taped under golden-hour
+  light, and recipe cards become torn kraft scraps with corner washi.
 - **Phase 9 — Polish (a11y / perf / responsive / QA):** a holistic pass over the whole app. Haptics — a
   guarded `vibrate()` (test-driven, no-ops without support) buzzes at the tactile beats (door, ribbon untie,
   opening a keepsake, the secret finale). A global `prefers-reduced-motion` CSS safety net neutralises any
