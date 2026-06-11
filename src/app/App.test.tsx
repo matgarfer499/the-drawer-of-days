@@ -65,7 +65,7 @@ describe("App navigation", () => {
 
     expect(screen.queryByText("abrir el doble fondo")).toBeNull();
 
-    for (const scene of ["timeline", "letter", "sky"] as const) {
+    for (const scene of ["timeline", "letter", "sky", "recipes"] as const) {
       fireEvent.click(screen.getByText(labelFor(scene)));
       fireEvent.click(await screen.findByRole("button", { name: "Volver a la caja" }));
       await screen.findByText("El cajón de los días");

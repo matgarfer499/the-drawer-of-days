@@ -17,6 +17,8 @@ const atFinale = (): ExperienceState =>
     { type: "CLOSE_SCENE" },
     { type: "ENTER_SCENE", scene: "sky" },
     { type: "CLOSE_SCENE" },
+    { type: "ENTER_SCENE", scene: "recipes" },
+    { type: "CLOSE_SCENE" },
     { type: "ENTER_FINALE" },
   );
 
@@ -38,6 +40,7 @@ describe("sceneSearchParam / sceneToSearch", () => {
 describe("sceneFromSearch", () => {
   it("parses a known URL scene", () => {
     expect(sceneFromSearch("?scene=timeline")).toBe("timeline");
+    expect(sceneFromSearch("?scene=recipes")).toBe("recipes");
     expect(sceneFromSearch("?scene=finale")).toBe("finale");
   });
 

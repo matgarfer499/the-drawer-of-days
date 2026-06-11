@@ -27,7 +27,7 @@ describe("useExperienceStore", () => {
   it("seeing every core scene unlocks the finale and lets it be entered", () => {
     get().enter();
     get().openBox();
-    for (const scene of ["timeline", "letter", "sky"] satisfies SpokeSceneId[]) {
+    for (const scene of ["timeline", "letter", "sky", "recipes"] satisfies SpokeSceneId[]) {
       get().enterScene(scene);
       get().closeScene();
     }

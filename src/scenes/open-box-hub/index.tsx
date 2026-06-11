@@ -2,6 +2,7 @@ import { content } from "@content";
 import { useReducedMotion } from "@features/reduced-motion";
 import { useExperienceStore } from "@features/scene-engine";
 import { vibrate } from "@shared/lib/haptics";
+import { seededTransformVars } from "@shared/lib/seededRotation";
 import { SceneFrame } from "@shared/ui/SceneFrame";
 import { StampPin } from "@shared/ui/StampPin";
 import { ThreadLine } from "@shared/ui/ThreadLine";
@@ -9,6 +10,7 @@ import { motion } from "motion/react";
 import { useEffect, useRef } from "react";
 import { tv } from "tailwind-variants";
 import { hubLayout, hubPositionVars } from "./hubLayout";
+import { KEEPSAKE_ICONS } from "./keepsakes";
 
 const layout = tv({
   slots: {
@@ -24,19 +26,22 @@ const layout = tv({
   },
 });
 
+// The keepsakes sit hand-placed on the open box: no card, no shadow — just the
+// animated icon and its label, each tilted/nudged by a seed so the collage looks
+// laid out by hand. The seed vars live on the button; the icon and label inherit
+// them. The morph frame itself stays upright so the shared-layout morph is clean.
 const keepsake = tv({
   slots: {
     button:
       "absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 rounded-xl p-1 left-[var(--hub-x)] top-[var(--hub-y)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rose-deep",
-    frame: "relative block rounded-md bg-paper-cream p-1.5 shadow-paper",
-    art: "h-20 w-20 object-contain",
-    label: "max-w-24 text-center font-hand text-lg leading-tight text-ink-sepia",
-    stamp: "absolute -top-3 -right-3 h-9 w-9 text-sm",
+    frame: "relative block",
+    iconTilt:
+      "block rotate-[var(--seed-rot)] translate-x-[var(--seed-x)] translate-y-[var(--seed-y)]",
+    icon: "h-24 w-24",
+    label:
+      "max-w-24 rotate-[var(--seed-rot)] translate-x-[var(--seed-x)] text-center font-hand text-lg leading-tight text-ink-sepia",
+    stamp: "absolute -top-2 -right-2 h-9 w-9 text-sm",
   },
-  variants: {
-    veiled: { true: { button: "opacity-45 grayscale" }, false: {} },
-  },
-  defaultVariants: { veiled: false },
 });
 
 /**
@@ -90,7 +95,8 @@ export function Hub() {
             const point = points[i];
             if (!point) return null;
             const isVisited = visited.has(object.scene);
-            const slots = keepsake({ veiled: !isVisited });
+            const slots = keepsake();
+            const Icon = KEEPSAKE_ICONS[object.scene];
             return (
               <motion.button
                 key={object.id}
@@ -99,7 +105,14 @@ export function Hub() {
                 }}
                 type="button"
                 className={slots.button()}
-                style={hubPositionVars(point)}
+                style={{
+                  ...hubPositionVars(point),
+                  ...seededTransformVars(object.id, {
+                    maxRotation: 6,
+                    maxOffset: 4,
+                    seed: content.seed,
+                  }),
+                }}
                 onClick={() => {
                   vibrate(8);
                   enterScene(object.scene);
@@ -111,15 +124,9 @@ export function Hub() {
                   className={slots.frame()}
                   {...(reduced ? {} : { layoutId: `spoke-${object.scene}` })}
                 >
-                  <img
-                    className={slots.art()}
-                    src={object.art.src}
-                    alt=""
-                    width={object.art.width}
-                    height={object.art.height}
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <span className={slots.iconTilt()}>
+                    <Icon animate={!isVisited} className={slots.icon()} />
+                  </span>
                   {isVisited && (
                     <StampPin
                       id={`seen-${object.id}`}

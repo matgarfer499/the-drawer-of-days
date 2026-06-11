@@ -13,6 +13,12 @@ export const reasons: Reason[] = [
   },
   { id: "r-coffee", order: 3, text: "Por los desayunos lentos de los domingos." },
   { id: "sky", order: 4, text: "Por mirar el mismo cielo y acordarme de ti.", unlockedBy: "sky" },
-  { id: "r-home", order: 5, text: "Porque cualquier sitio contigo es casa." },
-  { id: "r-future", order: 6, text: "Por todo lo que aún nos queda por vivir." },
+  {
+    id: "recipes",
+    order: 5,
+    text: "Por cocinar contigo y por cada mesa que hemos compartido.",
+    unlockedBy: "recipes",
+  },
+  { id: "r-home", order: 6, text: "Porque cualquier sitio contigo es casa." },
+  { id: "r-future", order: 7, text: "Por todo lo que aún nos queda por vivir." },
 ];

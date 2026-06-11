@@ -1,32 +1,10 @@
-import { placeholderImage } from "./placeholders/asset";
 import type { HubObject } from "./schema";
 
-// TODO(contenido real): el arte recortado de cada objeto (PNG con alfa, ~600px) + su etiqueta.
+// TODO(contenido real): la etiqueta manuscrita de cada objeto. El arte es un icono SVG
+// animado por código (ver src/scenes/open-box-hub/keepsakes), no un asset de contenido.
 export const hubObjects: HubObject[] = [
-  {
-    id: "cassette",
-    label: "nuestra cinta",
-    scene: "timeline",
-    palmSize: true,
-    art: placeholderImage({ width: 600, height: 600, label: "casete", alt: "Un casete de cinta" }),
-  },
-  {
-    id: "envelope",
-    label: "ábreme despacio",
-    scene: "letter",
-    palmSize: true,
-    art: placeholderImage({ width: 600, height: 600, label: "sobre", alt: "Un sobre cerrado" }),
-  },
-  {
-    id: "starmap",
-    label: "nuestro cielo",
-    scene: "sky",
-    palmSize: false,
-    art: placeholderImage({
-      width: 600,
-      height: 600,
-      label: "mapa estelar",
-      alt: "Un mapa de estrellas dibujado a mano",
-    }),
-  },
+  { id: "cassette", label: "nuestra cinta", scene: "timeline", palmSize: true },
+  { id: "envelope", label: "ábreme despacio", scene: "letter", palmSize: true },
+  { id: "starmap", label: "nuestro cielo", scene: "sky", palmSize: false },
+  { id: "recetario", label: "nuestro recetario", scene: "recipes", palmSize: true },
 ];

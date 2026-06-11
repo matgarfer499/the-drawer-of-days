@@ -79,6 +79,8 @@ describe("the finale gate", () => {
       { type: "CLOSE_SCENE" },
       { type: "ENTER_SCENE", scene: "sky" },
       { type: "CLOSE_SCENE" },
+      { type: "ENTER_SCENE", scene: "recipes" },
+      { type: "CLOSE_SCENE" },
     );
 
   it("stays locked until every core scene has been seen", () => {

@@ -46,9 +46,10 @@ const baseContent = {
   relationshipStartDate: "2021-02-14",
   seed: 1,
   opening: { greetingLine: "g", subGreetingLine: "s", ribbonHint: "r", lidHint: "l" },
-  scenes: { timeline: sceneCopy, letter: sceneCopy, sky: sceneCopy },
-  hubObjects: [{ id: "h1", label: "l", scene: "timeline", art: validAsset, palmSize: true }],
+  scenes: { timeline: sceneCopy, letter: sceneCopy, sky: sceneCopy, recipes: sceneCopy },
+  hubObjects: [{ id: "h1", label: "l", scene: "timeline", palmSize: true }],
   milestones: [{ id: "m1", date: "2023-02-14", title: "t", body: "b", photos: [validAsset] }],
+  recipes: [{ id: "rec1", kind: "home", title: "t", note: "n", photo: validAsset }],
   reasons: [{ id: "r1", order: 1, text: "x" }],
   sky: {
     nodes: [node("n1"), node("n2")],

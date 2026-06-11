@@ -6,6 +6,7 @@ import { Finale } from "@scenes/finale-double-bottom";
 import { LetterEnvelope } from "@scenes/letter-envelope";
 import { Hub } from "@scenes/open-box-hub";
 import { PaperSky } from "@scenes/paper-sky";
+import { RecipesBox } from "@scenes/recipes-box";
 import { SealedBox } from "@scenes/sealed-box";
 import { AnimatePresence, LayoutGroup } from "motion/react";
 import type { ReactElement } from "react";
@@ -14,6 +15,7 @@ const SPOKE_SCENE: Record<SpokeSceneId, ReactElement> = {
   timeline: <CassetteTimeline key="timeline" />,
   letter: <LetterEnvelope key="letter" />,
   sky: <PaperSky key="sky" />,
+  recipes: <RecipesBox key="recipes" />,
 };
 
 /**

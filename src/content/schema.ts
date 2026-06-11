@@ -8,7 +8,7 @@ import { z } from "zod";
 
 /** Spoke scenes a hub object opens / a reason is unlocked by. Mirrors
  *  scene-engine's `SpokeSceneId` — kept in sync by schema.cross.test.ts. */
-export const spokeSceneIdSchema = z.enum(["timeline", "letter", "sky"]);
+export const spokeSceneIdSchema = z.enum(["timeline", "letter", "sky", "recipes"]);
 
 /** A reference to an image/clip asset. Real files drop into `src/assets` later;
  *  `width`/`height` are mandatory so the layout never shifts (CLS = 0). */
@@ -39,12 +39,12 @@ export const openingSchema = z.object({
 });
 export type Opening = z.infer<typeof openingSchema>;
 
-/** A keepsake in the open box that opens a spoke. */
+/** A keepsake in the open box that opens a spoke. Its art is a code-driven,
+ *  animated SVG icon (a UI concern, keyed by `scene`), not a content asset. */
 export const hubObjectSchema = z.object({
   id: z.string().min(1),
   label: z.string().min(1),
   scene: spokeSceneIdSchema,
-  art: assetRefSchema,
   /** fits in the palm — feeds the finale's "cabes en mi mano" */
   palmSize: z.boolean().default(true),
 });
@@ -62,6 +62,22 @@ export const milestoneSchema = z.object({
   side: z.enum(["A", "B"]).default("A"),
 });
 export type Milestone = z.infer<typeof milestoneSchema>;
+
+/** A recipe card in the recetario: a dish we cook at home, or a meal/place we love eating out. */
+export const recipeCardKindSchema = z.enum(["home", "out"]);
+export type RecipeCardKind = z.infer<typeof recipeCardKindSchema>;
+
+export const recipeCardSchema = z.object({
+  id: z.string().min(1),
+  /** home = lo cocinamos juntos; out = salimos a comerlo */
+  kind: recipeCardKindSchema,
+  /** the dish (home) or the restaurant/meal (out) */
+  title: z.string().min(1),
+  /** home → la anécdota/los ingredientes; out → el sitio y por qué nos gusta */
+  note: z.string().min(1),
+  photo: assetRefSchema,
+});
+export type RecipeCard = z.infer<typeof recipeCardSchema>;
 
 /** A reason in the letter — lights up as its scene is seen (incremental letter). */
 export const reasonSchema = z.object({
@@ -149,9 +165,11 @@ export const contentSchema = z
       timeline: sceneCopySchema,
       letter: sceneCopySchema,
       sky: sceneCopySchema,
+      recipes: sceneCopySchema,
     }),
     hubObjects: z.array(hubObjectSchema).min(1).readonly(),
     milestones: z.array(milestoneSchema).min(1).readonly(),
+    recipes: z.array(recipeCardSchema).min(1).readonly(),
     reasons: z.array(reasonSchema).min(1).readonly(),
     sky: skySchema,
     song: songSchema,
@@ -159,6 +177,7 @@ export const contentSchema = z
   })
   .refine((c) => hasUniqueIds(c.hubObjects), { error: "hubObjects: los ids deben ser únicos." })
   .refine((c) => hasUniqueIds(c.milestones), { error: "milestones: los ids deben ser únicos." })
+  .refine((c) => hasUniqueIds(c.recipes), { error: "recipes: los ids deben ser únicos." })
   .refine((c) => hasUniqueIds(c.reasons), { error: "reasons: los ids deben ser únicos." })
   .refine((c) => hasUniqueIds(c.sky.nodes), { error: "sky.nodes: los ids deben ser únicos." })
   .refine((c) => hasUniqueIds(c.sky.constellations), {

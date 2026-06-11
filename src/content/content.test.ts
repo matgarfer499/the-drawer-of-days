@@ -19,7 +19,7 @@ describe("content", () => {
 
   it("opens exactly one hub object per spoke", () => {
     const scenes = new Set(content.hubObjects.map((object) => object.scene));
-    expect(scenes).toEqual(new Set(["timeline", "letter", "sky"]));
+    expect(scenes).toEqual(new Set(["timeline", "letter", "sky", "recipes"]));
   });
 
   it("keeps the finale promise blank on purpose", () => {

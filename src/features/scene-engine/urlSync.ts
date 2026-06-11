@@ -3,7 +3,13 @@ import type { ExperienceState, SceneId } from "./types";
 const SCENE_PARAM = "scene";
 
 /** Scenes that appear in the URL, so the visitor can resume / the back button works. */
-const URL_SCENES: ReadonlySet<SceneId> = new Set<SceneId>(["timeline", "letter", "sky", "finale"]);
+const URL_SCENES: ReadonlySet<SceneId> = new Set<SceneId>([
+  "timeline",
+  "letter",
+  "sky",
+  "recipes",
+  "finale",
+]);
 
 /** The `?scene=` value for a state, or null when the active node is the door/box/hub. */
 export function sceneSearchParam(state: ExperienceState): SceneId | null {

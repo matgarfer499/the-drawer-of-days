@@ -9,8 +9,14 @@ const apply = (state: ExperienceState, ...actions: ExperienceAction[]): Experien
 const open = (): ExperienceState =>
   apply(initialExperienceState, { type: "ENTER" }, { type: "OPEN_BOX" });
 
-const visit = (state: ExperienceState, scene: "timeline" | "letter" | "sky"): ExperienceState =>
-  apply(state, { type: "ENTER_SCENE", scene }, { type: "CLOSE_SCENE" });
+const visit = (
+  state: ExperienceState,
+  scene: "timeline" | "letter" | "sky" | "recipes",
+): ExperienceState => apply(state, { type: "ENTER_SCENE", scene }, { type: "CLOSE_SCENE" });
+
+/** Visit every core scene in order — the finale gate's precondition. */
+const visitAllCore = (): ExperienceState =>
+  visit(visit(visit(visit(open(), "timeline"), "letter"), "sky"), "recipes");
 
 describe("isVeiled", () => {
   it("veils a spoke until it has been opened", () => {
@@ -40,16 +46,14 @@ describe("canEnterFinale", () => {
   });
 
   it("is true at the hub once every core scene has been seen", () => {
-    const all = visit(visit(visit(open(), "timeline"), "letter"), "sky");
-    expect(canEnterFinale(all)).toBe(true);
+    expect(canEnterFinale(visitAllCore())).toBe(true);
   });
 });
 
 describe("coreProgress", () => {
   it("reports fractional progress through the core scenes", () => {
     expect(coreProgress(open())).toBe(0);
-    expect(coreProgress(visit(open(), "timeline"))).toBeCloseTo(1 / 3);
-    const all = visit(visit(visit(open(), "timeline"), "letter"), "sky");
-    expect(coreProgress(all)).toBe(1);
+    expect(coreProgress(visit(open(), "timeline"))).toBeCloseTo(1 / 4);
+    expect(coreProgress(visitAllCore())).toBe(1);
   });
 });

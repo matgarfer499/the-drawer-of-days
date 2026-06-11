@@ -1,5 +1,5 @@
-/** The three openable hub objects (the "spokes"). */
-export type SpokeSceneId = "timeline" | "letter" | "sky";
+/** The openable hub objects (the "spokes"). */
+export type SpokeSceneId = "timeline" | "letter" | "sky" | "recipes";
 
 /** Every node in the experience graph. */
 export type SceneId = "door" | "seal" | "hub" | SpokeSceneId | "finale";

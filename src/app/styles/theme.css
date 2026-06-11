@@ -33,6 +33,13 @@
 
   /* The ribbon's bow "breathes" to invite a pull. Use via motion-safe:animate-breathe. */
   --animate-breathe: breathe 2.6s ease-in-out infinite;
+
+  /* Hub keepsake idle motions — they invite a tap until the scene is seen, then
+     freeze. Always applied via motion-safe:* so prefers-reduced-motion rests them. */
+  --animate-reel-spin: reel-spin 4s linear infinite;
+  --animate-flap-breathe: flap-breathe 3.4s ease-in-out infinite;
+  --animate-twinkle: twinkle 2.4s ease-in-out infinite;
+  --animate-peek: peek 3s ease-in-out infinite;
 }
 
 @keyframes breathe {
@@ -44,5 +51,47 @@
   50% {
     transform: scale(1.3);
     opacity: 0.12;
+  }
+}
+
+/* The cassette reels turn. Pair with origin-center [transform-box:fill-box]. */
+@keyframes reel-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* The envelope flap tilts open a touch and settles. Pair with origin-top [transform-box:fill-box]. */
+@keyframes flap-breathe {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-8deg);
+  }
+}
+
+/* A star on the paper sky twinkles. Pair with origin-center [transform-box:fill-box]. */
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.82);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* A recipe card peeks out of the box. */
+@keyframes peek {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
   }
 }

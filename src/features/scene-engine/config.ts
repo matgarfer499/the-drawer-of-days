@@ -15,6 +15,7 @@ export const SCENE_CONFIG: Record<SpokeSceneId, SpokeConfig> = {
   timeline: { isCore: true, unlocksReasonId: "timeline" },
   letter: { isCore: true },
   sky: { isCore: true, unlocksReasonId: "sky" },
+  recipes: { isCore: true, unlocksReasonId: "recipes" },
 };
 
 /** Scenes that must be seen before the finale's secret compartment appears. */
@@ -23,4 +24,4 @@ export const CORE_SCENES: readonly SpokeSceneId[] = (
 ).filter((scene) => SCENE_CONFIG[scene].isCore);
 
 /** Chronological order for the "show me everything" guided tour. */
-export const TOUR_ORDER: readonly SpokeSceneId[] = ["timeline", "letter", "sky"];
+export const TOUR_ORDER: readonly SpokeSceneId[] = ["timeline", "letter", "sky", "recipes"];
