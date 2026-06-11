@@ -5,6 +5,7 @@
 
 export type { Point } from "@shared/lib/stitchPath";
 export { CloseControl } from "./CloseControl";
+export { GrainOverlay } from "./GrainOverlay";
 export { PaperFrame } from "./PaperFrame";
 export { Polaroid } from "./Polaroid";
 export { PostmarkDate } from "./PostmarkDate";
