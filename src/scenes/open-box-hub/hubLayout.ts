@@ -1,4 +1,4 @@
-import { mulberry32 } from "@shared/lib/seededRotation";
+import { hashId, mulberry32 } from "@shared/lib/seededRotation";
 
 export interface HubPoint {
   /** horizontal centre, as a percentage of the hub (0–100) */
@@ -44,4 +44,14 @@ export function hubLayout(count: number, seed = 0): HubPoint[] {
  */
 export function hubPositionVars(point: HubPoint): Record<`--${string}`, string> {
   return { "--hub-x": `${point.x.toFixed(2)}%`, "--hub-y": `${point.y.toFixed(2)}%` };
+}
+
+/**
+ * Delay (in seconds) before a keepsake settles into the box on the hub's first
+ * reveal: a cascade down the zigzag with a seeded jitter so the drop never feels
+ * mechanical. Deterministic — same id + seed → identical choreography.
+ */
+export function hubEntryDelay(id: string, index: number, seed = 0): number {
+  const jitter = mulberry32(hashId(id) ^ (seed >>> 0))() * 0.08;
+  return 0.15 + index * 0.07 + jitter;
 }
