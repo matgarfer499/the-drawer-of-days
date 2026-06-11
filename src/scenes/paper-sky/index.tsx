@@ -16,13 +16,13 @@ const ui = tv({
     root: "absolute inset-0 h-full w-full",
     header:
       "absolute inset-x-0 top-[max(0.75rem,env(safe-area-inset-top))] z-10 flex flex-col items-center gap-0.5 text-center",
-    title: "font-display text-2xl text-silver-pen",
+    title: "font-display type-title text-2xl text-silver-pen",
     hint: "font-hand text-xl text-silver-pen/70",
     lines: "pointer-events-none absolute inset-0 h-full w-full",
     line: "fill-none stroke-silver-pen/70",
     field: "absolute inset-0",
     reveal:
-      "pointer-events-none absolute inset-x-0 top-[38%] z-10 px-8 text-center font-display text-2xl text-silver-pen leading-snug [text-shadow:0_0_16px_var(--color-golden-hour)]",
+      "pointer-events-none absolute inset-x-0 top-[38%] z-10 px-8 text-center font-display type-tender text-2xl text-silver-pen leading-snug [text-shadow:0_0_16px_var(--color-golden-hour)]",
     detail:
       "absolute inset-x-0 bottom-[max(1rem,env(safe-area-inset-bottom))] z-10 flex flex-col items-center gap-2",
     detailLabel: "font-hand text-2xl text-silver-pen",

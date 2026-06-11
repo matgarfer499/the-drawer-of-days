@@ -16,7 +16,7 @@ const REEL_TURNS = 6;
 const ui = tv({
   slots: {
     root: "flex h-full w-full max-w-md flex-col items-center gap-3 py-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))]",
-    title: "font-display text-3xl text-ink-sepia",
+    title: "font-display type-title text-3xl text-ink-sepia",
     subtitle: "-mt-1 font-hand text-2xl text-faded-rose",
     track:
       "flex w-full flex-1 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",

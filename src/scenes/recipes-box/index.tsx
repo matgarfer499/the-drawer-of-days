@@ -16,7 +16,7 @@ const TABS: { value: RecipeFilter; label: string }[] = [
 const ui = tv({
   slots: {
     root: "flex h-full w-full max-w-md flex-col items-center gap-3 py-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))]",
-    title: "font-display text-3xl text-ink-sepia",
+    title: "font-display type-title text-3xl text-ink-sepia",
     subtitle: "-mt-1 font-hand text-2xl text-faded-rose",
     tabs: "flex flex-wrap items-center justify-center gap-2",
     tab: "min-h-11 rounded-full border border-aged-tan/50 px-4 font-body text-sm text-faded-ink transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",

@@ -12,7 +12,7 @@ import { composeLetter } from "./letter";
 const ui = tv({
   slots: {
     root: "flex h-full w-full max-w-md flex-col items-center gap-3 py-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))]",
-    title: "font-display text-3xl text-ink-sepia",
+    title: "font-display type-title text-3xl text-ink-sepia",
     subtitle: "-mt-1 font-hand text-2xl text-faded-rose",
     sheet: "w-full min-h-0 flex-1 overflow-y-auto",
     list: "flex flex-col gap-4",

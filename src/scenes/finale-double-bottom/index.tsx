@@ -16,7 +16,7 @@ const ui = tv({
       "absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 overflow-y-auto overscroll-contain px-8 py-[max(1rem,env(safe-area-inset-top))] text-center",
     eyebrow: "font-body text-silver-pen/75 text-xs uppercase tracking-[0.3em]",
     thesis:
-      "max-w-md font-display text-2xl text-silver-pen leading-snug [text-shadow:0_0_20px_var(--color-golden-hour)]",
+      "max-w-md font-display type-tender text-3xl text-silver-pen leading-snug [text-shadow:0_0_20px_var(--color-golden-hour)]",
     promise: "flex flex-col items-center gap-2",
     frame:
       "flex min-h-24 w-44 flex-col items-center justify-center gap-1 rounded-sm border border-silver-pen/40 border-dashed p-3",

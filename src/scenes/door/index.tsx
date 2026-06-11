@@ -12,7 +12,7 @@ const door = tv({
     button:
       "flex flex-col items-center gap-4 rounded-3xl px-8 py-10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rose-deep",
     greeting:
-      "max-w-xs text-balance font-display text-4xl font-semibold leading-tight text-ink-sepia",
+      "max-w-xs text-balance font-display type-poster text-4xl font-medium leading-tight text-ink-sepia",
     hint: "mt-2 text-xs uppercase tracking-[0.25em] text-faded-ink",
   },
 });
