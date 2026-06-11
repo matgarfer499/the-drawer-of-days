@@ -1,9 +1,13 @@
 import { content } from "@content";
 import { audioEngine } from "@features/audio";
 import { useReducedMotion } from "@features/reduced-motion";
+import { seededTransformVars } from "@shared/lib/seededRotation";
+import { Doodle } from "@shared/ui/Doodle";
 import { Polaroid } from "@shared/ui/Polaroid";
 import { PostmarkDate } from "@shared/ui/PostmarkDate";
 import { SceneFrame } from "@shared/ui/SceneFrame";
+import { TornEdge } from "@shared/ui/TornEdge";
+import { WashiTape } from "@shared/ui/WashiTape";
 import { useMotionValueEvent, useScroll, useTransform, useVelocity } from "motion/react";
 import { useRef, useState } from "react";
 import { tv } from "tailwind-variants";
@@ -21,8 +25,13 @@ const ui = tv({
     track:
       "flex w-full flex-1 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
     panel:
-      "flex w-full shrink-0 snap-center flex-col items-center justify-center gap-2.5 overflow-y-auto overscroll-y-contain px-1",
-    side: "rounded bg-kraft-tan/70 px-2 py-0.5 font-body text-stamp uppercase tracking-[0.2em] text-ink-sepia",
+      "flex w-full shrink-0 snap-center flex-col items-stretch justify-center gap-4 overflow-y-auto overscroll-y-contain px-1",
+    side: "ml-7 w-fit self-start rounded-[2px] bg-kraft-tan px-2.5 py-1 font-body text-ink-sepia text-stamp uppercase tracking-[0.2em] shadow-tape rotate-[var(--seed-rot)]",
+    photoGroup: "relative ml-4 inline-block w-fit self-start pb-6",
+    photoTape: "-top-3 -left-8 absolute z-10 -rotate-45",
+    postmark:
+      "-right-10 -bottom-1 absolute z-10 rounded-full bg-paper-cream/60 backdrop-blur-[1px]",
+    scrap: "mr-3 w-fit max-w-[34ch] self-end",
     milestoneTitle: "font-display text-2xl text-ink-sepia",
     body: "max-w-[30ch] font-body text-sm leading-relaxed text-faded-ink",
     dots: "flex items-center justify-center gap-1",
@@ -32,8 +41,18 @@ const ui = tv({
   variants: {
     smooth: { true: { track: "scroll-smooth" }, false: {} },
     active: { true: { dotInner: "scale-150 bg-faded-rose" }, false: {} },
+    // every other memory mirrors the spread, so the tape never reads as a list
+    flip: {
+      true: {
+        side: "mr-7 ml-0 self-end",
+        photoGroup: "mr-4 ml-0 self-end",
+        postmark: "-left-10 right-auto",
+        scrap: "mr-0 ml-3 self-start",
+      },
+      false: {},
+    },
   },
-  defaultVariants: { smooth: true, active: false },
+  defaultVariants: { smooth: true, active: false, flip: false },
 });
 
 /**
@@ -95,6 +114,7 @@ export function CassetteTimeline() {
         >
           {milestones.map((milestone, index) => {
             const photo = milestone.photos[0];
+            const flip = index % 2 === 1;
             return (
               <article
                 key={milestone.id}
@@ -105,17 +125,40 @@ export function CassetteTimeline() {
                 aria-roledescription="recuerdo"
                 aria-label={`${index + 1} de ${milestones.length}: ${milestone.title}`}
               >
-                <span className={s.side()}>Cara {milestone.side}</span>
-                {photo ? (
-                  <Polaroid id={milestone.id} src={photo.src} alt={photo.alt} size="sm" />
-                ) : null}
-                <PostmarkDate
-                  id={`pm-${milestone.id}`}
-                  date={formatPostmark(milestone.date)}
-                  dateTime={milestone.date}
-                />
-                <h2 className={s.milestoneTitle()}>{milestone.title}</h2>
-                <p className={s.body()}>{milestone.body}</p>
+                <span
+                  className={s.side({ flip })}
+                  style={seededTransformVars(`side-${milestone.id}`, {
+                    maxRotation: 5,
+                    maxOffset: 3,
+                  })}
+                >
+                  Cara {milestone.side}
+                </span>
+                <span className={s.photoGroup({ flip })}>
+                  <span aria-hidden="true" className={s.photoTape()}>
+                    <WashiTape id={`tl-tape-${milestone.id}`} tone="sage" length="sm" />
+                  </span>
+                  {photo ? (
+                    <Polaroid id={milestone.id} src={photo.src} alt={photo.alt} size="sm" />
+                  ) : null}
+                  <PostmarkDate
+                    id={`pm-${milestone.id}`}
+                    date={formatPostmark(milestone.date)}
+                    dateTime={milestone.date}
+                    className={s.postmark({ flip })}
+                  />
+                </span>
+                <TornEdge id={`scrap-${milestone.id}`} tone="cream" className={s.scrap({ flip })}>
+                  <h2 className={s.milestoneTitle()}>{milestone.title}</h2>
+                  <Doodle
+                    id={`underline-${milestone.id}`}
+                    kind="wave"
+                    tone="sage"
+                    size="sm"
+                    className="-mt-1"
+                  />
+                  <p className={s.body()}>{milestone.body}</p>
+                </TornEdge>
               </article>
             );
           })}
