@@ -3,7 +3,9 @@ import { useReducedMotion } from "@features/reduced-motion";
 import { useExperienceStore } from "@features/scene-engine";
 import { vibrate } from "@shared/lib/haptics";
 import { seededTransformVars } from "@shared/lib/seededRotation";
+import { Doodle } from "@shared/ui/Doodle";
 import { GrainOverlay } from "@shared/ui/GrainOverlay";
+import { PhotoCorner } from "@shared/ui/PhotoCorner";
 import { SceneFrame } from "@shared/ui/SceneFrame";
 import { StampPin } from "@shared/ui/StampPin";
 import { ThreadLine } from "@shared/ui/ThreadLine";
@@ -118,13 +120,30 @@ export function Hub() {
             length="sm"
             className="absolute right-[5%] bottom-[3%]"
           />
+          {/* pencil marks and photo mounts — the tin's floor has been lived on */}
+          <Doodle
+            id="hub-doodle-heart"
+            kind="heart"
+            tone="rose"
+            size="sm"
+            className="absolute top-[10%] right-[12%]"
+          />
+          <Doodle
+            id="hub-doodle-ast"
+            kind="asterisk"
+            tone="ink"
+            size="sm"
+            className="absolute bottom-[12%] left-[10%]"
+          />
+          <PhotoCorner corner="tl" tone="cream" className="top-2 left-2" />
+          <PhotoCorner corner="br" tone="cream" className="right-2 bottom-2" />
         </div>
         <div className={interiorLip()} aria-hidden="true" />
 
         <motion.h1
           className={title()}
           style={seededTransformVars("hub-title", {
-            maxRotation: 2,
+            maxRotation: 3.2,
             maxOffset: 0,
             seed: content.seed,
           })}

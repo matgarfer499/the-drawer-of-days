@@ -4,7 +4,9 @@ import { useReducedMotion } from "@features/reduced-motion";
 import { useExperienceStore } from "@features/scene-engine";
 import { vibrate } from "@shared/lib/haptics";
 import { seededTransformVars } from "@shared/lib/seededRotation";
+import { Doodle } from "@shared/ui/Doodle";
 import { GrainOverlay } from "@shared/ui/GrainOverlay";
+import { PhotoCorner } from "@shared/ui/PhotoCorner";
 import { SceneFrame } from "@shared/ui/SceneFrame";
 import { WashiTape } from "@shared/ui/WashiTape";
 import { motion } from "motion/react";
@@ -12,9 +14,12 @@ import { tv } from "tailwind-variants";
 
 const door = tv({
   slots: {
-    // late-afternoon light falling on the page where the card waits
+    // late-afternoon light falling on the page where the card waits — it breathes
     backdrop:
-      "pointer-events-none absolute inset-0 bg-radial-[at_50%_30%] from-golden-hour/15 to-transparent",
+      "pointer-events-none absolute inset-0 bg-radial-[at_50%_30%] from-golden-hour/15 to-transparent motion-safe:animate-light-breathe",
+    pageTape: "absolute top-[14%] left-[7%] rotate-12",
+    pageDoodle: "absolute right-[8%] bottom-[10%]",
+    pageSpiral: "absolute top-[10%] right-[12%]",
     button:
       "relative flex flex-col items-center gap-4 rounded-sm bg-paper-cream px-8 py-10 shadow-paper-lifted rotate-[var(--seed-rot)] translate-x-[var(--seed-x)] translate-y-[var(--seed-y)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rose-deep",
     tape: "-top-3 absolute left-1/2 -translate-x-1/2",
@@ -34,7 +39,7 @@ const door = tv({
 export function Door() {
   const enter = useExperienceStore((state) => state.enter);
   const reduced = useReducedMotion();
-  const { backdrop, button, tape, greeting, hint } = door();
+  const { backdrop, button, tape, greeting, hint, pageTape, pageDoodle, pageSpiral } = door();
   const handleEnter = () => {
     vibrate(10);
     audioEngine.unlock();
@@ -43,6 +48,12 @@ export function Door() {
   return (
     <SceneFrame>
       <div className={backdrop()} aria-hidden="true" />
+      {/* the page around the card has been lived on: a stray tape, pencil marks */}
+      <span aria-hidden="true" className={pageTape()}>
+        <WashiTape id="door-washi-2" tone="kraft" length="sm" />
+      </span>
+      <Doodle id="door-doodle" kind="asterisk" tone="ink" size="lg" className={pageDoodle()} />
+      <Doodle id="door-spiral" kind="spiral" tone="ink" size="md" className={pageSpiral()} />
       {/* h1 wraps the button (button is phrasing content) so the entry screen has
           a heading without shrinking the full-screen tap target */}
       <h1 className="contents">
@@ -60,6 +71,8 @@ export function Door() {
         >
           <GrainOverlay />
           <WashiTape id="door-tape" tone="golden" className={tape()} />
+          <PhotoCorner corner="tl" tone="kraft" />
+          <PhotoCorner corner="br" tone="kraft" />
           <motion.span
             className={greeting()}
             initial={reduced ? false : { opacity: 0, y: 10 }}
