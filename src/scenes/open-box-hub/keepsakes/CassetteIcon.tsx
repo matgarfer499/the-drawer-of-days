@@ -43,30 +43,70 @@ function Reel({ cx, cy, animate }: { cx: number; cy: number; animate: boolean })
 /** The cassette keepsake → the timeline scene. The reels turn until it's been seen. */
 export function CassetteIcon({ animate, className }: KeepsakeIconProps) {
   return (
-    <svg viewBox="0 0 100 100" aria-hidden="true" className={cn("h-full w-full", className)}>
-      <rect
-        x={10}
-        y={24}
-        width={80}
-        height={52}
-        rx={8}
-        className="fill-kraft-tan stroke-ink-sepia"
-        strokeWidth={3}
-      />
-      <rect
-        x={20}
-        y={32}
-        width={60}
-        height={26}
-        rx={3}
-        className="fill-paper-cream stroke-ink-sepia/60"
-        strokeWidth={2}
-      />
-      <Reel cx={37} cy={45} animate={animate} />
-      <Reel cx={63} cy={45} animate={animate} />
-      <rect x={24} y={64} width={52} height={7} rx={2} className="fill-paper-cream/70" />
-      <circle cx={30} cy={67.5} r={1.6} className="fill-ink-sepia" />
-      <circle cx={70} cy={67.5} r={1.6} className="fill-ink-sepia" />
+    <svg
+      viewBox="0 0 100 100"
+      aria-hidden="true"
+      className={cn("h-full w-full drop-shadow-sticker", className)}
+    >
+      {/* the whole cassette sways imperceptibly, as if held in a hand */}
+      <g
+        className={cn(
+          "origin-center [transform-box:fill-box]",
+          animate && "motion-safe:animate-idle-tilt",
+        )}
+      >
+        {/* paper-cut sticker edge */}
+        <rect
+          x={10}
+          y={24}
+          width={80}
+          height={52}
+          rx={8}
+          className="fill-paper-cream stroke-paper-cream"
+          strokeWidth={5}
+        />
+        <rect
+          x={10}
+          y={24}
+          width={80}
+          height={52}
+          rx={8}
+          className="fill-kraft-tan stroke-ink-sepia"
+          strokeWidth={3}
+        />
+        {/* corner screws */}
+        <circle cx={15} cy={29} r={1.4} className="fill-aged-tan" />
+        <circle cx={85} cy={29} r={1.4} className="fill-aged-tan" />
+        <circle cx={15} cy={71} r={1.4} className="fill-aged-tan" />
+        <circle cx={85} cy={71} r={1.4} className="fill-aged-tan" />
+        <rect
+          x={20}
+          y={32}
+          width={60}
+          height={26}
+          rx={3}
+          className="fill-paper-cream stroke-ink-sepia/60"
+          strokeWidth={2}
+        />
+        <Reel cx={37} cy={45} animate={animate} />
+        <Reel cx={63} cy={45} animate={animate} />
+        {/* the tape sags a little between the reels */}
+        <path
+          d="M41 53 C 46 57, 54 57, 59 53"
+          fill="none"
+          className="stroke-ink-sepia/70"
+          strokeWidth={1.5}
+          strokeLinecap="round"
+        />
+        {/* glare across the window glass */}
+        <polygon points="26 32 34 32 27 58 23 58" className="fill-paper-cream/40" />
+        {/* the handwritten label strip */}
+        <rect x={24} y={64} width={52} height={7} rx={2} className="fill-paper-cream/70" />
+        <rect x={35} y={66} width={22} height={1.2} rx={0.6} className="fill-faded-ink/40" />
+        <rect x={35} y={68.4} width={30} height={1.2} rx={0.6} className="fill-faded-ink/30" />
+        <circle cx={30} cy={67.5} r={1.6} className="fill-ink-sepia" />
+        <circle cx={70} cy={67.5} r={1.6} className="fill-ink-sepia" />
+      </g>
     </svg>
   );
 }
