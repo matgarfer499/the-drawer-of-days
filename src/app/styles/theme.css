@@ -53,6 +53,8 @@
   --animate-steam-rise: steam-rise 3.6s ease-in-out infinite;
   --animate-seal-pulse: seal-pulse 3.4s ease-in-out infinite;
   --animate-idle-tilt: idle-tilt 5s ease-in-out infinite;
+  --animate-cloud-drift: cloud-drift 26s ease-in-out infinite alternate;
+  --animate-light-breathe: light-breathe 7s ease-in-out infinite;
 }
 
 @keyframes breathe {
@@ -160,6 +162,50 @@
   50% {
     transform: rotate(0.6deg);
   }
+}
+
+/* A paper cloud drifts a few px and back — barely there. */
+@keyframes cloud-drift {
+  from {
+    transform: translateX(-6px);
+  }
+  to {
+    transform: translateX(6px);
+  }
+}
+
+/* The pool of golden light breathes — opacity only. */
+@keyframes light-breathe {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/*
+ * Ruled letter paper: faint teal rules every --ruled-step and a red margin line
+ * at --ruled-margin. Pure gradients — zero assets, zero filters.
+ */
+@utility bg-ruled {
+  background-image: linear-gradient(
+      to right,
+      transparent calc(var(--ruled-margin, 2.25rem) - 1px),
+      color-mix(in oklab, var(--color-faded-rose) 35%, transparent)
+        calc(var(--ruled-margin, 2.25rem) - 1px),
+      color-mix(in oklab, var(--color-faded-rose) 35%, transparent) var(--ruled-margin, 2.25rem),
+      transparent var(--ruled-margin, 2.25rem)
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--ruled-step, 2rem) - 1px),
+      color-mix(in oklab, var(--color-dusty-teal) 22%, transparent)
+        calc(var(--ruled-step, 2rem) - 1px),
+      color-mix(in oklab, var(--color-dusty-teal) 22%, transparent) var(--ruled-step, 2rem)
+    );
 }
 
 /*

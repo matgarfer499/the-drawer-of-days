@@ -5,8 +5,16 @@ import { tv } from "tailwind-variants";
 const threadLine = tv({
   slots: {
     svg: "pointer-events-none absolute inset-0 h-full w-full",
-    path: "fill-none stroke-faded-rose stroke-2 [stroke-dasharray:5_7] [stroke-linecap:round]",
+    path: "fill-none stroke-2 [stroke-dasharray:5_7] [stroke-linecap:round]",
   },
+  variants: {
+    tone: {
+      rose: { path: "stroke-faded-rose" },
+      silver: { path: "stroke-silver-pen/80" },
+      golden: { path: "stroke-golden-hour/70" },
+    },
+  },
+  defaultVariants: { tone: "rose" },
 });
 
 interface ThreadLineProps {
@@ -20,6 +28,10 @@ interface ThreadLineProps {
   maxSag?: number;
   /** animate the stitch being sewn (a mask sweeps along the path); default static */
   draw?: boolean;
+  /** delay (s) before the draw sweep starts */
+  drawDelay?: number;
+  /** thread colour: the red of the hub, silver for the night sky, gold for the finale */
+  tone?: "rose" | "silver" | "golden";
   className?: string;
 }
 
@@ -40,9 +52,11 @@ export function ThreadLine({
   height = 100,
   maxSag,
   draw = false,
+  drawDelay = 0.35,
+  tone = "rose",
   className,
 }: ThreadLineProps) {
-  const { svg, path } = threadLine();
+  const { svg, path } = threadLine({ tone });
   const opts: StitchPathOptions = maxSag === undefined ? {} : { maxSag };
   const d = stitchPath(from, to, id, opts);
   const maskId = `thread-draw-${id}`;
@@ -73,7 +87,7 @@ export function ThreadLine({
             vectorEffect="non-scaling-stroke"
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}
-            transition={{ duration: 0.7, ease: "easeInOut", delay: 0.35 }}
+            transition={{ duration: 0.7, ease: "easeInOut", delay: drawDelay }}
           />
         </mask>
       )}

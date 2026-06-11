@@ -25,4 +25,11 @@ describe("ThreadLine", () => {
       "non-scaling-stroke",
     );
   });
+
+  it("threads in other tones keep the same stitch, only recoloured", () => {
+    const { container } = render(<ThreadLine id="t" from={from} to={to} tone="silver" />);
+    const path = container.querySelector("path");
+    expect(path?.getAttribute("d")).toBe(stitchPath(from, to, "t"));
+    expect(path?.getAttribute("class")).toContain("stroke-silver-pen");
+  });
 });
