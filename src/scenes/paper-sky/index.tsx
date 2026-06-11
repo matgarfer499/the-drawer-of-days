@@ -59,7 +59,7 @@ export function PaperSky() {
   const s = ui();
 
   return (
-    <SceneFrame tone="night" morphId="spoke-sky">
+    <SceneFrame tone="night" morphId="spoke-sky" flavor="nightfall">
       <div className={s.root()}>
         <header className={s.header()}>
           <h1 className={s.title()}>{content.scenes.sky.title}</h1>

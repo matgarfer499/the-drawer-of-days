@@ -79,7 +79,7 @@ export function RecipesBox() {
   const s = ui({ smooth: !reduced });
 
   return (
-    <SceneFrame morphId="spoke-recipes">
+    <SceneFrame morphId="spoke-recipes" flavor="flip">
       <div className={s.root()}>
         <h1 className={s.title()}>{content.scenes.recipes.title}</h1>
         <p className={s.subtitle()}>{content.scenes.recipes.tagline}</p>

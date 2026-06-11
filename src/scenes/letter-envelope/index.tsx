@@ -79,7 +79,7 @@ export function LetterEnvelope() {
   const s = ui({ spent: view.remaining === 0 });
 
   return (
-    <SceneFrame morphId="spoke-letter">
+    <SceneFrame morphId="spoke-letter" flavor="unfold">
       <div className={s.root()}>
         <h1 className={s.title()}>{content.scenes.letter.title}</h1>
         <p className={s.subtitle()}>{content.scenes.letter.tagline}</p>

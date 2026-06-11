@@ -40,7 +40,7 @@ export function Finale() {
   const s = ui();
 
   return (
-    <SceneFrame tone="night" bare={!reduced}>
+    <SceneFrame tone="night" bare={!reduced} flavor="nightfall">
       <div className={s.root()}>
         {/* heading first in the DOM so AT reaches the thesis before the photos */}
         <div className={s.center()}>

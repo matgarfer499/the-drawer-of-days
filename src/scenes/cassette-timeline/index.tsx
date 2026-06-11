@@ -78,7 +78,7 @@ export function CassetteTimeline() {
   const s = ui({ smooth: !reduced });
 
   return (
-    <SceneFrame morphId="spoke-timeline">
+    <SceneFrame morphId="spoke-timeline" flavor="slide">
       <div className={s.root()}>
         <h1 className={s.title()}>{content.scenes.timeline.title}</h1>
         <p className={s.subtitle()}>{content.scenes.timeline.tagline}</p>
