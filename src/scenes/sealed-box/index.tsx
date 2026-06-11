@@ -2,6 +2,7 @@ import { content } from "@content";
 import { useReducedMotion } from "@features/reduced-motion";
 import { useExperienceStore } from "@features/scene-engine";
 import { vibrate } from "@shared/lib/haptics";
+import { GrainOverlay } from "@shared/ui/GrainOverlay";
 import { SceneFrame } from "@shared/ui/SceneFrame";
 import { AnimatePresence, motion, useAnimate, useMotionValue, useTransform } from "motion/react";
 import { useState } from "react";
@@ -13,16 +14,23 @@ const seal = tv({
   slots: {
     wrap: "flex flex-col items-center gap-6",
     shell:
-      "relative grid h-56 w-56 place-items-center rounded-2xl border-2 border-aged-tan/50 bg-kraft-tan/40 shadow-paper-lifted",
+      "relative grid h-56 w-56 place-items-center rounded-2xl border-2 border-aged-tan/60 bg-gradient-to-br from-kraft-tan/60 via-kraft-tan/40 to-aged-tan/50 shadow-tin",
     inside:
       "pointer-events-none absolute inset-2 rounded-xl bg-radial from-golden-hour/45 to-transparent",
-    lid: "absolute inset-0 grid touch-none place-items-center rounded-2xl border-2 border-aged-tan/50 bg-kraft-tan/70 shadow-paper-lifted",
+    lid: "absolute inset-0 grid touch-none place-items-center rounded-2xl border-2 border-aged-tan/50 bg-gradient-to-br from-kraft-tan/85 to-aged-tan/60 shadow-tin",
+    scuff: "pointer-events-none absolute top-3 right-3 h-6 w-6 stroke-aged-tan/40",
     halo: "pointer-events-none absolute h-24 w-24 rounded-full bg-faded-rose/35 blur-md motion-safe:animate-breathe",
-    knot: "relative z-10 grid h-16 w-16 touch-none cursor-grab select-none place-items-center rounded-full bg-rose-deep font-display text-sm text-paper-cream shadow-paper active:cursor-grabbing focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
+    knot: "relative z-10 grid h-16 w-16 touch-none cursor-grab select-none place-items-center rounded-full bg-radial-[at_35%_35%] from-faded-rose to-rose-deep font-display text-sm text-paper-cream shadow-paper active:cursor-grabbing focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
     arrow: "pointer-events-none absolute z-10 text-3xl text-rose-deep motion-safe:animate-bounce",
+    labelWrap: "flex flex-col items-center gap-6",
     label: "font-hand text-2xl text-ink-sepia",
     hint: "h-4 text-xs uppercase tracking-[0.2em] text-faded-ink",
     open: "min-h-11 rounded-full bg-faded-rose px-6 py-3 font-display text-base text-paper-cream shadow-paper focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
+    // the dive-in cinematics: the edges darken (vignette) and the golden interior
+    // floods the frame (bloom) as the dolly zoom rushes past
+    vignette:
+      "pointer-events-none absolute inset-0 z-20 bg-radial from-transparent via-transparent via-55% to-ink-sepia",
+    bloom: "pointer-events-none absolute inset-0 z-30 bg-golden-hour",
   },
 });
 
@@ -46,6 +54,10 @@ export function SealedBox() {
   const unravel = useMotionValue(0); // 0 = tied bow, 1 = fully undone
   const zoom = useMotionValue(1); // dolly-in scale of the whole box on opening
   const insideGlow = useTransform(zoom, [1, 4], [0.55, 1]); // the interior blooms as we dive in
+  const lidTilt = useTransform(lift, [0, -200], [0, -5]); // the lid pivots a touch as it rises
+  const vignette = useTransform(zoom, [1, 2.5, 9], [0, 0.18, 0.6]);
+  const bloom = useTransform(zoom, [4, 9], [0, 0.55]);
+  const labelFade = useTransform(zoom, [1, 2.2], [1, 0]); // the copy gets out of the way of the dive
 
   const tied = phase === "tied";
   const untied = phase === "untied";
@@ -73,6 +85,7 @@ export function SealedBox() {
     <SceneFrame>
       <div className={slots.wrap()}>
         <motion.div ref={scope} className={slots.shell()} style={{ scale: zoom }}>
+          <GrainOverlay />
           <motion.span
             aria-hidden="true"
             className={slots.inside()}
@@ -86,7 +99,7 @@ export function SealedBox() {
           ) : (
             <motion.div
               className={slots.lid()}
-              style={{ y: lift }}
+              style={{ y: lift, rotate: lidTilt }}
               drag={untied ? "y" : false}
               dragConstraints={{ top: -120, bottom: 0 }}
               dragElastic={0.3}
@@ -102,6 +115,13 @@ export function SealedBox() {
                 }
               }}
             >
+              <GrainOverlay />
+              {/* a few hairline scuffs — the tin has lived in a drawer */}
+              <svg className={slots.scuff()} viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 18 L13 8" strokeWidth="1" fill="none" />
+                <path d="M7 20 L15 12" strokeWidth="0.8" fill="none" />
+                <path d="M12 21 L18 15" strokeWidth="0.6" fill="none" />
+              </svg>
               <Ribbon pull={pull} untie={unravel} phase={phase} />
 
               <span className="relative grid place-items-center">
@@ -167,13 +187,26 @@ export function SealedBox() {
           )}
         </motion.div>
 
-        <h1 className={slots.label()}>{content.opening.subGreetingLine}</h1>
-        {!reduced && (
-          <span className={slots.hint()}>
-            {tied ? content.opening.ribbonHint : untied ? content.opening.lidHint : ""}
-          </span>
-        )}
+        <motion.div className={slots.labelWrap()} style={{ opacity: labelFade }}>
+          <h1 className={slots.label()}>{content.opening.subGreetingLine}</h1>
+          {!reduced && (
+            <span className={slots.hint()}>
+              {tied ? content.opening.ribbonHint : untied ? content.opening.lidHint : ""}
+            </span>
+          )}
+        </motion.div>
       </div>
+
+      {!reduced && (
+        <>
+          <motion.div
+            aria-hidden="true"
+            className={slots.vignette()}
+            style={{ opacity: vignette }}
+          />
+          <motion.div aria-hidden="true" className={slots.bloom()} style={{ opacity: bloom }} />
+        </>
+      )}
     </SceneFrame>
   );
 }
