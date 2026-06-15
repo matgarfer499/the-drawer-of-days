@@ -1,7 +1,8 @@
 import { content } from "@content";
 import { useReducedMotion } from "@features/reduced-motion";
 import { SceneFrame } from "@shared/ui/SceneFrame";
-import { useMotionValueEvent, useScroll } from "motion/react";
+import { WashiTape } from "@shared/ui/WashiTape";
+import { motion, useMotionValueEvent, useScroll } from "motion/react";
 import { useRef, useState } from "react";
 import { tv } from "tailwind-variants";
 import { RecipeCard } from "./components/RecipeCard";
@@ -16,10 +17,12 @@ const TABS: { value: RecipeFilter; label: string }[] = [
 const ui = tv({
   slots: {
     root: "flex h-full w-full max-w-md flex-col items-center gap-3 py-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))]",
-    title: "font-display text-3xl text-ink-sepia",
+    titleWrap: "relative isolate",
+    titleTape: "-top-2 -z-10 absolute left-1/2 -translate-x-1/2",
+    title: "font-display type-title text-3xl text-ink-sepia",
     subtitle: "-mt-1 font-hand text-2xl text-faded-rose",
     tabs: "flex flex-wrap items-center justify-center gap-2",
-    tab: "min-h-11 rounded-full border border-aged-tan/50 px-4 font-body text-sm text-faded-ink transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
+    tab: "min-h-11 rounded-full border border-aged-tan/50 px-4 font-body text-sm text-faded-ink transition-[color,background-color,border-color,rotate] duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
     track:
       "flex w-full flex-1 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
     panel:
@@ -27,13 +30,14 @@ const ui = tv({
     empty: "grid flex-1 place-items-center font-hand text-2xl text-faded-rose",
     dots: "flex min-h-11 items-center justify-center gap-1",
     dot: "grid h-11 w-11 place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
-    dotInner: "h-2.5 w-2.5 rounded-full bg-aged-tan transition-transform",
+    dotInner: "h-2.5 w-2.5 rounded-full bg-aged-tan",
   },
   variants: {
     smooth: { true: { track: "scroll-smooth" }, false: {} },
-    active: { true: { dotInner: "scale-150 bg-faded-rose" }, false: {} },
+    active: { true: { dotInner: "bg-rose-deep" }, false: {} },
     selected: {
-      true: { tab: "border-transparent bg-faded-rose/30 text-ink-sepia" },
+      // the chosen tab sits slapped-on, like a stamp pressed a touch askew
+      true: { tab: "-rotate-1 border-transparent bg-faded-rose/30 text-ink-sepia shadow-tape" },
       false: {},
     },
   },
@@ -79,9 +83,12 @@ export function RecipesBox() {
   const s = ui({ smooth: !reduced });
 
   return (
-    <SceneFrame morphId="spoke-recipes">
+    <SceneFrame morphId="spoke-recipes" flavor="flip">
       <div className={s.root()}>
-        <h1 className={s.title()}>{content.scenes.recipes.title}</h1>
+        <div className={s.titleWrap()}>
+          <WashiTape id="recipes-title-tape" tone="teal" className={s.titleTape()} />
+          <h1 className={s.title()}>{content.scenes.recipes.title}</h1>
+        </div>
         <p className={s.subtitle()}>{content.scenes.recipes.tagline}</p>
 
         <div className={s.tabs()}>
@@ -136,7 +143,14 @@ export function RecipesBox() {
                 aria-current={active === index}
                 onClick={() => goTo(index)}
               >
-                <span className={s.dotInner({ active: active === index })} />
+                <motion.span
+                  className={s.dotInner({ active: active === index })}
+                  initial={false}
+                  animate={{ scale: active === index ? 1.5 : 1 }}
+                  transition={
+                    reduced ? { duration: 0 } : { type: "spring", stiffness: 400, damping: 18 }
+                  }
+                />
               </button>
             ))}
           </nav>

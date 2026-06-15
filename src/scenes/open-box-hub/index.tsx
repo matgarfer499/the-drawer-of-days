@@ -3,20 +3,29 @@ import { useReducedMotion } from "@features/reduced-motion";
 import { useExperienceStore } from "@features/scene-engine";
 import { vibrate } from "@shared/lib/haptics";
 import { seededTransformVars } from "@shared/lib/seededRotation";
+import { Doodle } from "@shared/ui/Doodle";
+import { GrainOverlay } from "@shared/ui/GrainOverlay";
+import { PhotoCorner } from "@shared/ui/PhotoCorner";
 import { SceneFrame } from "@shared/ui/SceneFrame";
 import { StampPin } from "@shared/ui/StampPin";
 import { ThreadLine } from "@shared/ui/ThreadLine";
-import { motion } from "motion/react";
+import { WashiTape } from "@shared/ui/WashiTape";
+import { motion, type Variants } from "motion/react";
 import { useEffect, useRef } from "react";
 import { tv } from "tailwind-variants";
-import { hubLayout, hubPositionVars } from "./hubLayout";
+import { hubEntryDelay, hubLayout, hubPositionVars } from "./hubLayout";
 import { KEEPSAKE_ICONS } from "./keepsakes";
 
 const layout = tv({
   slots: {
     stage: "relative mx-auto h-full w-full max-w-md",
+    // the inside of the tin: a kraft floor that darkens toward the lip, sunk by a warm inset shade
+    interior:
+      "pointer-events-none absolute inset-x-3 top-[9%] bottom-[5%] rounded-[1.75rem] bg-gradient-to-b from-kraft-tan/50 via-kraft-tan/30 to-aged-tan/45 shadow-paper-inset",
+    interiorLip:
+      "pointer-events-none absolute inset-x-3 top-[9%] bottom-[5%] rounded-[1.75rem] border-2 border-aged-tan/40",
     title:
-      "absolute inset-x-0 top-[max(0.75rem,env(safe-area-inset-top))] text-center font-hand text-2xl text-faded-rose",
+      "absolute inset-x-0 top-[max(0.75rem,env(safe-area-inset-top))] text-center font-display type-poster text-3xl text-ink-sepia rotate-[var(--seed-rot)]",
     nav: "absolute inset-0",
     controls:
       "absolute inset-x-0 bottom-[max(0.75rem,env(safe-area-inset-bottom))] flex flex-col items-center gap-2",
@@ -43,6 +52,18 @@ const keepsake = tv({
     stamp: "absolute -top-2 -right-2 h-9 w-9 text-sm",
   },
 });
+
+// Each keepsake drops into the box and settles with one soft spring overshoot;
+// the per-item delay cascades down the zigzag (see hubEntryDelay).
+const keepsakeVariants: Variants = {
+  hidden: { opacity: 0, y: 18, scale: 0.9 },
+  shown: (delay: number) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { delay, type: "spring", stiffness: 340, damping: 24, mass: 0.9 },
+  }),
+};
 
 /**
  * The open box: a collage of keepsake objects laid out by hubLayout, the red
@@ -74,23 +95,87 @@ export function Hub() {
   const points = hubLayout(objects.length, content.seed);
   const pointFor = new Map(objects.map((object, i) => [object.scene, points[i]]));
   const visitedOrder = [...visited];
+  const newestVisited = visitedOrder.at(-1);
 
-  const { stage, title, nav, controls, secret, tour } = layout();
+  // The settling choreography plays only the first time the box opens; coming
+  // back from a scene must leave the layoutId morph-back uncontested.
+  const reveal = !reduced && previousScene === null;
+
+  const { stage, interior, interiorLip, title, nav, controls, secret, tour } = layout();
 
   return (
     <SceneFrame>
       <div className={stage()}>
-        <h1 className={title()}>El cajón de los días</h1>
+        <div className={interior()} aria-hidden="true">
+          <GrainOverlay />
+          <WashiTape
+            id="hub-washi-a"
+            tone="sage"
+            length="sm"
+            className="absolute top-[6%] left-[5%]"
+          />
+          <WashiTape
+            id="hub-washi-b"
+            tone="rose"
+            length="sm"
+            className="absolute right-[5%] bottom-[3%]"
+          />
+          {/* pencil marks and photo mounts — the tin's floor has been lived on */}
+          <Doodle
+            id="hub-doodle-heart"
+            kind="heart"
+            tone="rose"
+            size="sm"
+            className="absolute top-[10%] right-[12%]"
+          />
+          <Doodle
+            id="hub-doodle-ast"
+            kind="asterisk"
+            tone="ink"
+            size="sm"
+            className="absolute bottom-[12%] left-[10%]"
+          />
+          <PhotoCorner corner="tl" tone="cream" className="top-2 left-2" />
+          <PhotoCorner corner="br" tone="cream" className="right-2 bottom-2" />
+        </div>
+        <div className={interiorLip()} aria-hidden="true" />
+
+        <motion.h1
+          className={title()}
+          style={seededTransformVars("hub-title", {
+            maxRotation: 3.2,
+            maxOffset: 0,
+            seed: content.seed,
+          })}
+          initial={reveal ? { opacity: 0, y: -8 } : false}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        >
+          El cajón de los días
+        </motion.h1>
 
         {/* the red thread sews opened keepsakes together, in the order they were seen */}
         {visitedOrder.slice(1).map((scene, i) => {
           const from = pointFor.get(visitedOrder[i] ?? scene);
           const to = pointFor.get(scene);
           if (!from || !to) return null;
-          return <ThreadLine key={`thread-${scene}`} id={`thread-${scene}`} from={from} to={to} />;
+          return (
+            <ThreadLine
+              key={`thread-${scene}`}
+              id={`thread-${scene}`}
+              from={from}
+              to={to}
+              draw={!reduced && scene === previousScene && scene === newestVisited}
+            />
+          );
         })}
 
-        <nav className={nav()} aria-label="Los recuerdos de la caja">
+        <motion.nav
+          className={nav()}
+          aria-label="Los recuerdos de la caja"
+          initial={reveal ? "hidden" : false}
+          animate="shown"
+        >
           {objects.map((object, i) => {
             const point = points[i];
             if (!point) return null;
@@ -113,6 +198,8 @@ export function Hub() {
                     seed: content.seed,
                   }),
                 }}
+                variants={keepsakeVariants}
+                custom={hubEntryDelay(object.id, i, content.seed)}
                 onClick={() => {
                   vibrate(8);
                   enterScene(object.scene);
@@ -142,9 +229,14 @@ export function Hub() {
               </motion.button>
             );
           })}
-        </nav>
+        </motion.nav>
 
-        <div className={controls()}>
+        <motion.div
+          className={controls()}
+          initial={reveal ? { opacity: 0, y: 8 } : false}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: reveal ? 0.55 : 0, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        >
           {finaleUnlocked && (
             <button
               type="button"
@@ -160,7 +252,7 @@ export function Hub() {
           <button type="button" className={tour()} onClick={startTour}>
             enséñamelo todo
           </button>
-        </div>
+        </motion.div>
       </div>
     </SceneFrame>
   );

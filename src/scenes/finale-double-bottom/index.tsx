@@ -1,6 +1,8 @@
 import { content } from "@content";
 import { useReducedMotion } from "@features/reduced-motion";
 import { SceneFrame } from "@shared/ui/SceneFrame";
+import { StampPin } from "@shared/ui/StampPin";
+import { ThreadLine } from "@shared/ui/ThreadLine";
 import { motion } from "motion/react";
 import { tv } from "tailwind-variants";
 import { ascendingLayout } from "./ascending";
@@ -12,14 +14,18 @@ const ui = tv({
   slots: {
     root: "absolute inset-0 h-full w-full overflow-hidden",
     photos: "pointer-events-none absolute inset-0",
+    // ground mist under the words: keeps the thesis legible over the sky and the
+    // ascending photos, in motion and in the reduced static collage alike
+    scrim:
+      "pointer-events-none absolute top-[62%] left-1/2 z-[5] h-[58%] w-[150%] -translate-x-1/2 -translate-y-1/2 bg-radial from-night-paper/75 via-night-paper/35 to-transparent",
     center:
-      "absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 overflow-y-auto overscroll-contain px-8 py-[max(1rem,env(safe-area-inset-top))] text-center",
+      "absolute inset-0 z-10 flex flex-col items-center justify-end gap-6 overflow-y-auto overscroll-contain px-8 pt-[max(1rem,env(safe-area-inset-top))] pb-[12dvh] text-center",
     eyebrow: "font-body text-silver-pen/75 text-xs uppercase tracking-[0.3em]",
     thesis:
-      "max-w-md font-display text-2xl text-silver-pen leading-snug [text-shadow:0_0_20px_var(--color-golden-hour)]",
+      "max-w-md font-display type-tender text-3xl text-silver-pen leading-snug [text-shadow:0_0_20px_var(--color-golden-hour)]",
     promise: "flex flex-col items-center gap-2",
     frame:
-      "flex min-h-24 w-44 flex-col items-center justify-center gap-1 rounded-sm border border-silver-pen/40 border-dashed p-3",
+      "relative flex min-h-24 w-44 flex-col items-center justify-center gap-1 rounded-sm bg-silver-pen/5 p-3",
     frameLabel: "font-hand text-xl text-silver-pen",
     pending: "font-body text-silver-pen/80 text-xs uppercase tracking-[0.2em]",
     note: "max-w-xs font-hand text-lg text-silver-pen/80",
@@ -40,7 +46,7 @@ export function Finale() {
   const s = ui();
 
   return (
-    <SceneFrame tone="night" bare={!reduced}>
+    <SceneFrame tone="night" bare={!reduced} flavor="nightfall">
       <div className={s.root()}>
         {/* heading first in the DOM so AT reaches the thesis before the photos */}
         <div className={s.center()}>
@@ -56,6 +62,42 @@ export function Finale() {
 
           <div className={s.promise()}>
             <div className={s.frame()}>
+              {/* the empty frame is hand-stitched in golden thread, a wobbly
+                  rectangle pinned to the night — never a clean dashed border */}
+              <ThreadLine
+                id="promise-top"
+                tone="golden"
+                from={{ x: 4, y: 6 }}
+                to={{ x: 96, y: 4 }}
+                maxSag={3}
+              />
+              <ThreadLine
+                id="promise-right"
+                tone="golden"
+                from={{ x: 96, y: 4 }}
+                to={{ x: 95, y: 95 }}
+                maxSag={3}
+              />
+              <ThreadLine
+                id="promise-bottom"
+                tone="golden"
+                from={{ x: 95, y: 95 }}
+                to={{ x: 5, y: 96 }}
+                maxSag={3}
+              />
+              <ThreadLine
+                id="promise-left"
+                tone="golden"
+                from={{ x: 5, y: 96 }}
+                to={{ x: 4, y: 6 }}
+                maxSag={3}
+              />
+              <StampPin
+                id="promise-pin"
+                kind="pin"
+                tone="golden"
+                className="-top-1 absolute right-7"
+              />
               <span className={s.frameLabel()}>{promise.frameLabel}</span>
               <span className={s.pending()}>{promise.pendingLabel}</span>
             </div>
@@ -63,18 +105,22 @@ export function Finale() {
           </div>
         </div>
 
+        <div className={s.scrim()} aria-hidden="true" />
+
         <div className={s.photos()}>
           {ascendingPhotos.map((photo, i) => {
             const spot = layout[i];
             if (!spot) return null;
-            // resting heights spread across the upper sky, in lift order
-            const y = 18 + (i / Math.max(1, ascendingPhotos.length - 1)) * 46;
+            // photos keep to the upper band, hugging alternating edges, so the
+            // thesis and the promise stay clear of them on a phone
+            const y = 8 + (i / Math.max(1, ascendingPhotos.length - 1)) * 26;
+            const x = i % 2 === 0 ? 10 + (spot.x / 100) * 26 : 64 + (spot.x / 100) * 26;
             return (
               <AscendingPhoto
                 key={photo.src}
                 id={`finale-photo-${i}`}
                 photo={photo}
-                x={spot.x}
+                x={x}
                 y={y}
                 rotate={spot.rotate}
                 delay={spot.delay}

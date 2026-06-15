@@ -1,5 +1,6 @@
 @import "tailwindcss";
-@import "@fontsource-variable/fraunces";
+/* full: carries the opsz/SOFT/WONK axes the display type leans on (see type-* utilities) */
+@import "@fontsource-variable/fraunces/full.css";
 @import "@fontsource-variable/caveat";
 @import "@fontsource-variable/nunito-sans";
 @import "./theme.css";

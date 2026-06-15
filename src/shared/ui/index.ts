@@ -5,7 +5,10 @@
 
 export type { Point } from "@shared/lib/stitchPath";
 export { CloseControl } from "./CloseControl";
+export { Doodle } from "./Doodle";
+export { GrainOverlay } from "./GrainOverlay";
 export { PaperFrame } from "./PaperFrame";
+export { PhotoCorner } from "./PhotoCorner";
 export { Polaroid } from "./Polaroid";
 export { PostmarkDate } from "./PostmarkDate";
 export { SceneFrame } from "./SceneFrame";
