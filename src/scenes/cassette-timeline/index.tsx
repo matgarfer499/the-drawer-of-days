@@ -25,13 +25,13 @@ const ui = tv({
     track:
       "flex w-full flex-1 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
     panel:
-      "flex w-full shrink-0 snap-center flex-col items-stretch justify-center gap-4 overflow-y-auto overscroll-y-contain px-1",
-    side: "ml-7 w-fit self-start rounded-[2px] bg-kraft-tan px-2.5 py-1 font-body text-ink-sepia text-stamp uppercase tracking-[0.2em] shadow-tape rotate-[var(--seed-rot)]",
-    photoGroup: "relative ml-4 inline-block w-fit self-start pb-6",
+      "flex w-full shrink-0 snap-center flex-col items-center justify-center gap-4 overflow-y-auto overscroll-y-contain px-1",
+    side: "w-fit self-center rounded-[2px] bg-kraft-tan px-2.5 py-1 font-body text-ink-sepia text-stamp uppercase tracking-[0.2em] shadow-tape rotate-[var(--seed-rot)]",
+    photoGroup: "relative inline-block w-fit self-center pb-6",
     photoTape: "-top-3 -left-8 absolute z-10 -rotate-45",
     postmark:
       "-right-10 -bottom-1 absolute z-10 rounded-full bg-paper-cream/60 backdrop-blur-[1px]",
-    scrap: "mr-3 w-fit max-w-[34ch] self-end",
+    scrap: "w-fit max-w-[34ch] self-center text-center",
     milestoneTitle: "font-display text-2xl text-ink-sepia",
     body: "max-w-[30ch] font-body text-sm leading-relaxed text-faded-ink",
     dots: "flex items-center justify-center gap-1",
@@ -41,13 +41,11 @@ const ui = tv({
   variants: {
     smooth: { true: { track: "scroll-smooth" }, false: {} },
     active: { true: { dotInner: "scale-150 bg-faded-rose" }, false: {} },
-    // every other memory mirrors the spread, so the tape never reads as a list
+    // photo and note stay centered; alternating panels only flip which corner the
+    // postmark overlaps, so the tape keeps a handmade variety without reading as a list
     flip: {
       true: {
-        side: "mr-7 ml-0 self-end",
-        photoGroup: "mr-4 ml-0 self-end",
         postmark: "-left-10 right-auto",
-        scrap: "mr-0 ml-3 self-start",
       },
       false: {},
     },
