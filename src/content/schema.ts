@@ -133,6 +133,16 @@ const promiseSchema = z.object({
   note: z.string().min(1),
 });
 
+/** The closing curtain — the end screen revealed after the double bottom. */
+const closingSchema = z.object({
+  /** the discreet affordance that invites the tap, e.g. "continuar" */
+  cue: z.string().min(1),
+  /** the farewell line, e.g. "Y que sean muchos más" */
+  message: z.string().min(1),
+  /** the signature under the message, e.g. "— por muchos años más, contigo" */
+  signature: z.string().min(1),
+});
+
 /** The double-bottom finale. */
 export const finaleSchema = z.object({
   /** the secret compartment's name, shown as the eyebrow */
@@ -140,6 +150,7 @@ export const finaleSchema = z.object({
   thesisLine: z.string().min(1),
   ascendingPhotos: z.array(assetRefSchema).min(1).readonly(),
   promise: promiseSchema,
+  closing: closingSchema,
 });
 export type Finale = z.infer<typeof finaleSchema>;
 

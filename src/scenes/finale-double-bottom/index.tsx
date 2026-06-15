@@ -7,8 +7,10 @@ import { motion } from "motion/react";
 import { tv } from "tailwind-variants";
 import { ascendingLayout } from "./ascending";
 import { AscendingPhoto } from "./components/AscendingPhoto";
+import { Closing } from "./components/Closing";
+import { DoubleBottomReveal } from "./components/DoubleBottomReveal";
 
-const { label, thesisLine, ascendingPhotos, promise } = content.finale;
+const { label, thesisLine, ascendingPhotos, promise, closing } = content.finale;
 
 const ui = tv({
   slots: {
@@ -44,10 +46,16 @@ export function Finale() {
   const reduced = useReducedMotion() ?? false;
   const layout = ascendingLayout(ascendingPhotos.length, content.seed);
   const s = ui();
+  // wait for the last photo to finish rising (step 0.5s + ~0.9s lift) before the
+  // closing cue invites the tap; reduced motion offers it at once
+  const settleDelayMs = reduced ? 0 : (ascendingPhotos.length * 0.5 + 1.4) * 1000;
 
   return (
     <SceneFrame tone="night" bare={!reduced} flavor="nightfall">
       <div className={s.root()}>
+        {/* the false bottom dissolving into the sky, on top until it clears */}
+        <DoubleBottomReveal reduced={reduced} />
+
         {/* heading first in the DOM so AT reaches the thesis before the photos */}
         <div className={s.center()}>
           <p className={s.eyebrow()}>{label}</p>
@@ -129,6 +137,9 @@ export function Finale() {
             );
           })}
         </div>
+
+        {/* the curtain: cue, then the farewell that ends the presentation */}
+        <Closing closing={closing} reduced={reduced} settleDelayMs={settleDelayMs} />
       </div>
     </SceneFrame>
   );

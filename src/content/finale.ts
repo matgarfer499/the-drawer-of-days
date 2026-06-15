@@ -20,4 +20,9 @@ export const finale: Finale = {
     pendingLabel: "— por escribir —",
     note: "Aquí dejamos un hueco a propósito. Lo llenamos nosotros.",
   },
+  closing: {
+    cue: "continuar",
+    message: "Y que sean muchos más",
+    signature: "— por muchos años más, contigo",
+  },
 };

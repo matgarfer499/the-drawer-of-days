@@ -62,6 +62,7 @@ const baseContent = {
     thesisLine: "t",
     ascendingPhotos: [validAsset],
     promise: { frameLabel: "f", pendingDate: "", pendingLabel: "p", note: "n" },
+    closing: { cue: "c", message: "m", signature: "s" },
   },
 };
 
