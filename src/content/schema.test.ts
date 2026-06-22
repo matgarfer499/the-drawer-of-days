@@ -42,8 +42,8 @@ describe("reasonSchema", () => {
 const node = (id: string) => ({ id, label: id, position: { x: 10, y: 20 } });
 const sceneCopy = { title: "t", tagline: "g" };
 const baseContent = {
-  anniversaryDate: "2024-02-14",
-  relationshipStartDate: "2021-02-14",
+  anniversaryDate: "2026-06-23",
+  relationshipStartDate: "2023-06-24",
   seed: 1,
   opening: { greetingLine: "g", subGreetingLine: "s", ribbonHint: "r", lidHint: "l" },
   scenes: { timeline: sceneCopy, letter: sceneCopy, sky: sceneCopy, recipes: sceneCopy },
