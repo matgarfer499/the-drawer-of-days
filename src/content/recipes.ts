@@ -1,39 +1,60 @@
-import { placeholderImage } from "./placeholders/asset";
+import { localPhoto } from "./localPhoto";
 import type { RecipeCard } from "./schema";
 
-/** 4:5 placeholder photo for a recipe card (same ratio as a Polaroid). */
-const photo = (label: string, alt: string) =>
-  placeholderImage({ width: 1200, height: 1500, label, alt });
+/** Real recipe-card photo (4:5 Polaroid; object-cover crops to fit). */
+const photo = (file: string, width: number, height: number, alt: string) =>
+  localPhoto({ path: `recipes/${file}.webp`, alt, width, height });
 
-// TODO(contenido real): platos que cocináis juntos (`home`) y sitios/comidas favoritas fuera (`out`).
-// Cada ficha: id único, kind, título, una nota (anécdota/ingredientes o el sitio y por qué), foto 4:5 + alt.
+// TODO(contenido real): reescribe `title` y `note` de cada ficha con la anécdota/ingredientes
+// de verdad (las fotos ya están cableadas). `kind`: home = lo cocináis juntos; out = salís a comerlo.
 export const recipes: RecipeCard[] = [
   {
-    id: "pasta-casa",
+    id: "home-01",
     kind: "home",
-    title: "La pasta de los viernes",
-    note: "Lo que cocinamos cuando no queremos pensar. // TODO: contenido real",
-    photo: photo("pasta en casa", "Marcador de la foto de la pasta que cocinamos en casa"),
+    title: "Lo que cocinamos en casa",
+    note: "// TODO: la receta o la anécdota de este plato que hacemos juntos.",
+    photo: photo("home-01", 1200, 1600, "Foto de un plato que cocinamos en casa"),
   },
   {
-    id: "domingo-cocina",
+    id: "home-02",
     kind: "home",
-    title: "Cocinar sin reloj",
-    note: "Un domingo entero entre fogones y música. // TODO: contenido real",
-    photo: photo("cocina de domingo", "Marcador de la foto de un domingo cocinando juntos"),
+    title: "Nuestra cocina, otro día",
+    note: "// TODO: qué cocinamos y por qué nos gusta hacerlo juntos.",
+    photo: photo("home-02", 1200, 1600, "Foto de otro plato que cocinamos en casa"),
   },
   {
-    id: "primera-cita-restaurante",
+    id: "restaurant-02",
     kind: "out",
-    title: "El sitio de la primera cita",
-    note: "El restaurante, lo que pedimos, los nervios. // TODO: contenido real",
-    photo: photo("nuestro restaurante", "Marcador de la foto del restaurante de la primera cita"),
+    title: "Un sitio al que volvemos",
+    note: "// TODO: el restaurante, qué pedimos y por qué nos sabe a casa.",
+    photo: photo("restaurant-02", 1200, 1600, "Foto de un restaurante al que vamos juntos"),
   },
   {
-    id: "favorito-fuera",
+    id: "restaurant-03",
     kind: "out",
-    title: "Nuestro favorito de siempre",
-    note: "Al que volvemos cada vez que hay algo que celebrar. // TODO: contenido real",
-    photo: photo("favorito de fuera", "Marcador de la foto de nuestro restaurante favorito"),
+    title: "Otra mesa que recordamos",
+    note: "// TODO: el sitio y el momento que pasamos allí.",
+    photo: photo("restaurant-03", 1200, 1600, "Foto de un restaurante al que vamos juntos"),
+  },
+  {
+    id: "restaurant-04",
+    kind: "out",
+    title: "Comiendo fuera, juntos",
+    note: "// TODO: dónde fue y qué hizo especial esa comida.",
+    photo: photo("restaurant-04", 1200, 1600, "Foto de una comida fuera de casa"),
+  },
+  {
+    id: "restaurant-05",
+    kind: "out",
+    title: "Nuestro plan de comer fuera",
+    note: "// TODO: el restaurante y por qué nos encanta.",
+    photo: photo("restaurant-05", 1500, 1125, "Foto de una comida fuera de casa"),
+  },
+  {
+    id: "restaurant-06",
+    kind: "out",
+    title: "Una más para el recetario",
+    note: "// TODO: el sitio, lo que pedimos y la anécdota.",
+    photo: photo("restaurant-06", 1200, 1600, "Foto de una comida fuera de casa"),
   },
 ];

@@ -1,52 +1,35 @@
-import { placeholderImage } from "./placeholders/asset";
+import { localPhoto } from "./localPhoto";
 import type { Sky } from "./schema";
 
-// TODO(contenido real): lugares/viajes como estrellas (label + foto opcional) y 1–3 constelaciones.
+/** Real photo for a sky node (shown as a Polaroid when the star is tapped). */
+const photo = (id: string, width: number, height: number, label: string) =>
+  localPhoto({ path: `sky/${id}.webp`, alt: `Foto de ${label}`, width, height });
+
 export const sky: Sky = {
   nodes: [
     {
       id: "home",
       label: "casa",
       position: { x: 30, y: 70 },
-      media: placeholderImage({
-        width: 1000,
-        height: 1000,
-        label: "casa",
-        alt: "Marcador de casa",
-      }),
+      media: photo("home", 1200, 1600, "casa"),
     },
     {
       id: "beach",
       label: "la playa",
       position: { x: 64, y: 40 },
-      media: placeholderImage({
-        width: 1000,
-        height: 1000,
-        label: "la playa",
-        alt: "Marcador de la playa",
-      }),
+      media: photo("beach", 1170, 2080, "la playa"),
     },
     {
       id: "mountains",
       label: "la montaña",
       position: { x: 48, y: 22 },
-      media: placeholderImage({
-        width: 1000,
-        height: 1000,
-        label: "la montaña",
-        alt: "Marcador de la montaña",
-      }),
+      media: photo("mountains", 2048, 1536, "la montaña"),
     },
     {
       id: "city",
       label: "la ciudad",
       position: { x: 20, y: 38 },
-      media: placeholderImage({
-        width: 1000,
-        height: 1000,
-        label: "la ciudad",
-        alt: "Marcador de la ciudad",
-      }),
+      media: photo("city", 1200, 1600, "la ciudad"),
     },
   ],
   constellations: [

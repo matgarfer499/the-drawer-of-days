@@ -1,19 +1,38 @@
-import { placeholderImage } from "./placeholders/asset";
-import type { Finale } from "./schema";
+import { localPhoto } from "./localPhoto";
+import type { AssetRef, Finale } from "./schema";
 
-const ascending = (n: number) =>
-  placeholderImage({
-    width: 800,
-    height: 1000,
-    label: `recuerdo ${n}`,
-    alt: `Marcador del recuerdo ${n}`,
-  });
+/** The double-bottom's ascending photos, with their real pixel sizes [n, width, height]. */
+const ASCENDING: ReadonlyArray<readonly [number, number, number]> = [
+  [1, 2160, 3840],
+  [2, 1170, 2080],
+  [3, 1536, 2048],
+  [4, 1200, 1600],
+  [5, 1200, 1600],
+  [6, 1200, 1600],
+  [7, 1200, 1600],
+  [8, 1200, 1600],
+  [9, 3024, 4032],
+  [10, 1200, 1600],
+  [11, 1200, 1600],
+  [12, 1500, 1125],
+  [13, 2400, 1600],
+  [14, 1200, 1600],
+  [15, 720, 1280],
+];
 
-// TODO(contenido real): el mensaje culminante, 5–9 polaroids que ascienden, y el hueco-promesa.
+const ascendingPhotos: AssetRef[] = ASCENDING.map(([n, width, height]) =>
+  localPhoto({
+    path: `finale/finale-${String(n).padStart(2, "0")}.webp`,
+    alt: `Recuerdo nuestro nº ${n}`,
+    width,
+    height,
+  }),
+);
+
 export const finale: Finale = {
   label: "El doble fondo",
   thesisLine: "Cabes en mi mano y a la vez llenas el cielo.",
-  ascendingPhotos: [ascending(1), ascending(2), ascending(3), ascending(4), ascending(5)],
+  ascendingPhotos,
   promise: {
     frameLabel: "nuestro próximo capítulo",
     pendingDate: "",
