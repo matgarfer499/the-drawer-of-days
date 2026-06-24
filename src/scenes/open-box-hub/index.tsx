@@ -31,7 +31,6 @@ const layout = tv({
       "absolute inset-x-0 bottom-[max(0.75rem,env(safe-area-inset-bottom))] flex flex-col items-center gap-2",
     secret:
       "inline-flex min-h-11 items-center rounded-full bg-golden-hour/40 px-5 font-hand text-xl text-rose-deep shadow-paper transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
-    tour: "inline-flex min-h-11 items-center px-4 text-xs uppercase tracking-[0.2em] text-faded-ink underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
   },
 });
 
@@ -74,7 +73,6 @@ const keepsakeVariants: Variants = {
 export function Hub() {
   const enterScene = useExperienceStore((state) => state.enterScene);
   const enterFinale = useExperienceStore((state) => state.enterFinale);
-  const startTour = useExperienceStore((state) => state.startTour);
   const visited = useExperienceStore((state) => state.visitedScenes);
   const finaleUnlocked = useExperienceStore((state) => state.finaleUnlocked);
   const previousScene = useExperienceStore((state) => state.previousScene);
@@ -101,7 +99,7 @@ export function Hub() {
   // back from a scene must leave the layoutId morph-back uncontested.
   const reveal = !reduced && previousScene === null;
 
-  const { stage, interior, interiorLip, title, nav, controls, secret, tour } = layout();
+  const { stage, interior, interiorLip, title, nav, controls, secret } = layout();
 
   return (
     <SceneFrame>
@@ -249,9 +247,6 @@ export function Hub() {
               abrir el doble fondo
             </button>
           )}
-          <button type="button" className={tour()} onClick={startTour}>
-            enséñamelo todo
-          </button>
         </motion.div>
       </div>
     </SceneFrame>

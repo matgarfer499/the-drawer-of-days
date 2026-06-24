@@ -32,10 +32,4 @@ describe("Hub", () => {
     render(<Hub />);
     expect(screen.queryByText("abrir el doble fondo")).toBeNull();
   });
-
-  it("offers the guided tour", () => {
-    render(<Hub />);
-    fireEvent.click(screen.getByText("enséñamelo todo"));
-    expect(useExperienceStore.getState().tour.active).toBe(true);
-  });
 });
