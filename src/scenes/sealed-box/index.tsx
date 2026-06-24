@@ -188,7 +188,9 @@ export function SealedBox() {
         </motion.div>
 
         <motion.div className={slots.labelWrap()} style={{ opacity: labelFade }}>
-          <h1 className={slots.label()}>{content.opening.subGreetingLine}</h1>
+          <h1 className={slots.label()}>
+            {tied ? content.opening.subGreetingLine : content.opening.subLidLine}
+          </h1>
           {!reduced && (
             <span className={slots.hint()}>
               {tied ? content.opening.ribbonHint : untied ? content.opening.lidHint : ""}

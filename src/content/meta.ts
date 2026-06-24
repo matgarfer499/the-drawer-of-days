@@ -10,6 +10,7 @@ export const meta = {
 export const opening: Opening = {
   greetingLine: "Esto es para ti linda",
   subGreetingLine: "Tira del lazo suavemente",
+  subLidLine: "Ahora levanta la tapa",
   ribbonHint: "desliza para tirar del lazo",
   lidHint: "desliza hacia arriba para abrir la caja",
 };

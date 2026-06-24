@@ -31,7 +31,10 @@ const skyPositionSchema = z.object({
 /** The door + sealed-box copy. */
 export const openingSchema = z.object({
   greetingLine: z.string().min(1),
+  /** the prominent line while the bow is tied: pull the ribbon */
   subGreetingLine: z.string().min(1),
+  /** the prominent line once untied: lift the lid (advances with the phase) */
+  subLidLine: z.string().min(1),
   /** hint shown while the bow is still tied: pull the knot sideways */
   ribbonHint: z.string().min(1),
   /** hint shown once untied: lift the lid */
