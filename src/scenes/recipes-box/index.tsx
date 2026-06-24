@@ -24,9 +24,11 @@ const ui = tv({
     tabs: "flex flex-wrap items-center justify-center gap-2",
     tab: "min-h-11 rounded-full border border-aged-tan/50 px-4 font-body text-sm text-faded-ink transition-[color,background-color,border-color,rotate] duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
     track:
-      "flex w-full flex-1 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+      "flex w-full min-h-0 flex-1 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+    // safe center: centred when the card fits, top-aligned (top stays reachable)
+    // when it's tall enough to scroll inside the panel — identical to the timeline tape
     panel:
-      "flex w-full shrink-0 snap-center flex-col items-center justify-center gap-2.5 overflow-y-auto overscroll-y-contain px-1",
+      "flex w-full shrink-0 snap-center flex-col items-center [justify-content:safe_center] gap-2.5 overflow-y-auto overscroll-y-contain px-1",
     empty: "grid flex-1 place-items-center font-hand text-2xl text-faded-rose",
     dots: "flex min-h-11 items-center justify-center gap-1",
     dot: "grid h-11 w-11 place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",

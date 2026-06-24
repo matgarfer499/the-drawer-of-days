@@ -23,9 +23,11 @@ const ui = tv({
     title: "font-display type-title text-3xl text-ink-sepia",
     subtitle: "-mt-1 font-hand text-2xl text-faded-rose",
     track:
-      "flex w-full flex-1 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+      "flex w-full min-h-0 flex-1 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+    // safe center: centred when the milestone fits, top-aligned (so its top stays
+    // reachable) when it's tall enough to scroll inside the panel
     panel:
-      "flex w-full shrink-0 snap-center flex-col items-center justify-center gap-4 overflow-y-auto overscroll-y-contain px-1",
+      "flex w-full shrink-0 snap-center flex-col items-center [justify-content:safe_center] gap-4 overflow-y-auto overscroll-y-contain px-1",
     side: "w-fit self-center rounded-[2px] bg-kraft-tan px-2.5 py-1 font-body text-ink-sepia text-stamp uppercase tracking-[0.2em] shadow-tape rotate-[var(--seed-rot)]",
     photoGroup: "relative inline-block w-fit self-center pb-6",
     photoTape: "-top-3 -left-8 absolute z-10 -rotate-45",

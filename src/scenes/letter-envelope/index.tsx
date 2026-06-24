@@ -33,7 +33,7 @@ const ui = tv({
     reason: "block max-w-[26ch] font-hand text-2xl leading-snug text-ink-sepia",
     pending:
       "mx-auto max-w-[85%] rounded-sm border border-aged-tan/50 border-dashed bg-paper-cream/40 px-3 py-1.5 text-center font-hand text-faded-ink/70 text-lg rotate-[var(--seed-rot)]",
-    controls: "flex flex-col items-center gap-1",
+    controls: "relative z-10 flex flex-col items-center gap-1",
     pullBtn:
       "flex min-h-11 items-center gap-3 rounded-full bg-paper-cream px-4 py-2 shadow-paper transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-rose-deep focus-visible:outline-offset-2",
     pullLabel: "font-hand text-xl text-rose-deep",
