@@ -27,8 +27,11 @@ const ui = tv({
     field: "absolute inset-0 z-[2]",
     reveal:
       "pointer-events-none absolute inset-x-0 top-[38%] z-10 px-8 text-center font-display type-tender text-2xl text-silver-pen leading-snug [text-shadow:0_0_16px_var(--color-golden-hour)]",
+    // the revealed photo is a passive reveal sitting above the star field (z-[2]);
+    // pointer-events-none lets taps fall through to every star — including the
+    // lowest one ("casa") the photo would otherwise cover and intercept
     detail:
-      "absolute inset-x-0 bottom-[max(1rem,env(safe-area-inset-bottom))] z-10 flex flex-col items-center gap-2",
+      "pointer-events-none absolute inset-x-0 bottom-[max(1rem,env(safe-area-inset-bottom))] z-10 flex flex-col items-center gap-2",
     detailWrap: "relative inline-block",
     detailTape: "-top-3 absolute left-1/2 z-10 -translate-x-1/2",
     detailLabel: "font-hand text-2xl text-ink-sepia",
