@@ -11,9 +11,10 @@ const polaroid = tv({
   },
   variants: {
     size: {
-      sm: { root: "w-32" },
-      md: { root: "w-44" },
-      lg: { root: "w-60" },
+      xs: { root: "w-32" },
+      sm: { root: "w-40" },
+      md: { root: "w-52" },
+      lg: { root: "w-72" },
     },
   },
   defaultVariants: { size: "md" },

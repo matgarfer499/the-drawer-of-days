@@ -50,7 +50,7 @@ export function AscendingPhoto({ id, photo, x, y, rotate, delay, reduced }: Asce
         <span aria-hidden="true" className={tape()}>
           <WashiTape id={`${id}-tape`} tone="golden" length="sm" />
         </span>
-        <Polaroid id={id} src={photo.src} alt={photo.alt} size="sm" />
+        <Polaroid id={id} src={photo.src} alt={photo.alt} size="xs" />
       </motion.div>
     </span>
   );
