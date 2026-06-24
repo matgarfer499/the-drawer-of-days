@@ -39,3 +39,5 @@ src/assets/video/*
 !src/assets/audio/placeholder-*
 !src/assets/photos/*.svg
 src/content/private/
+.vercel
+.env*
