@@ -34,8 +34,8 @@ const ui = tv({
     scrap: "w-fit max-w-[34ch] self-center text-center",
     milestoneTitle: "font-display text-2xl text-ink-sepia",
     body: "max-w-[30ch] font-body text-sm leading-relaxed text-faded-ink",
-    dots: "flex items-center justify-center gap-1",
-    dot: "grid h-11 w-11 place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
+    dots: "flex items-center justify-center",
+    dot: "grid h-11 w-11 -mx-1 place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
     dotInner: "h-2.5 w-2.5 rounded-full bg-aged-tan transition-transform",
   },
   variants: {
