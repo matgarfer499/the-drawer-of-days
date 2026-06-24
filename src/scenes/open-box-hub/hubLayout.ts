@@ -18,11 +18,12 @@ const clamp = (n: number, lo: number, hi: number): number => Math.min(hi, Math.m
 export function hubLayout(count: number, seed = 0): HubPoint[] {
   if (count <= 0) return [];
   const rng = mulberry32(seed >>> 0);
-  const top = 14;
-  // keep keepsakes clear of the bottom controls (finale gate / tour)
-  const bottom = 76;
+  const top = 12;
+  // spread the keepsakes down most of the tin: only the finale gate sits below now
+  // (the tour control is gone), so they need only stay clear of that + the safe area
+  const bottom = 82;
   const center = 50;
-  const amplitude = 20;
+  const amplitude = 26;
   const jitter = 5;
   const span = bottom - top;
 
