@@ -24,4 +24,4 @@ export const CORE_SCENES: readonly SpokeSceneId[] = (
 ).filter((scene) => SCENE_CONFIG[scene].isCore);
 
 /** Chronological order for the "show me everything" guided tour. */
-export const TOUR_ORDER: readonly SpokeSceneId[] = ["timeline", "letter", "sky", "recipes"];
+export const TOUR_ORDER: readonly SpokeSceneId[] = ["timeline", "sky", "recipes", "letter"];

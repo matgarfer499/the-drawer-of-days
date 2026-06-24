@@ -130,7 +130,7 @@ describe("the guided tour", () => {
   it("TOUR_NEXT marks the current scene seen and advances", () => {
     const s = apply(open(), { type: "START_TOUR" }, { type: "TOUR_NEXT" });
     expect(s.visitedScenes.has("timeline")).toBe(true);
-    expect(s.activeScene).toBe("letter");
+    expect(s.activeScene).toBe("sky");
   });
 
   it("STOP_TOUR ends the tour and returns to the hub", () => {
