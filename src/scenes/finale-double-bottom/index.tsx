@@ -20,8 +20,11 @@ const ui = tv({
     // ascending photos, in motion and in the reduced static collage alike
     scrim:
       "pointer-events-none absolute top-[62%] left-1/2 z-[5] h-[58%] w-[150%] -translate-x-1/2 -translate-y-1/2 bg-radial from-night-paper/75 via-night-paper/35 to-transparent",
+    // safe end keeps the thesis reachable if the column ever overflows; the
+    // bottom reserve clears the absolutely-pinned "continuar" cue (≈1.5rem + 44px)
+    // even when Safari's toolbar shrinks dvh, so the promise never sits under it
     center:
-      "absolute inset-0 z-10 flex flex-col items-center justify-end gap-6 overflow-y-auto overscroll-contain px-8 pt-[max(1rem,env(safe-area-inset-top))] pb-[12dvh] text-center",
+      "absolute inset-0 z-10 flex flex-col items-center [justify-content:safe_end] gap-6 overflow-y-auto overscroll-contain px-8 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(12dvh,6rem)] text-center",
     eyebrow: "font-body text-silver-pen/75 text-xs uppercase tracking-[0.3em]",
     thesis:
       "max-w-md font-display type-tender text-3xl text-silver-pen leading-snug [text-shadow:0_0_20px_var(--color-golden-hour)]",
