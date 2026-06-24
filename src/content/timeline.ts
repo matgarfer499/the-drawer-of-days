@@ -49,7 +49,7 @@ export const milestones: Milestone[] = [
   {
     id: "third-trip",
     date: "2025-03-28",
-    side: "A",
+    side: "B",
     title: "Nuestro tercer viaje (no paramos eh)",
     body: "Granadita, aunque con un final algo amargo porque te ibas seis meses fuera, pero fue una despedida increíble disfrutando de la ciudad y de la comida.",
     photos: [photo("third-trip", 1200, 1600, "Nuestro tercer viaje")],
@@ -57,7 +57,7 @@ export const milestones: Milestone[] = [
   {
     id: "the-forgivible-one",
     date: "2025-10-12",
-    side: "A",
+    side: "B",
     title: "Qué peste a meao",
     body: "Bruselas horrible, el viaje lo salvó la cerveza y Brujas jajajaja",
     photos: [photo("the-forgivible-one", 1200, 1600, "Qué peste a meao")],
@@ -65,7 +65,7 @@ export const milestones: Milestone[] = [
   {
     id: "fourth-trip",
     date: "2025-11-14",
-    side: "A",
+    side: "B",
     title: "Un cumpleaños inolvidable",
     body: "Anda que no tuvimos suerte de pillar vuelos tan baratos para Londres eh. Me encantó verte tan ilusionada celebrando tu cumpleaños allí",
     photos: [photo("fourth-trip", 1200, 1600, "Un cumpleaños inolvidable")],
@@ -73,7 +73,7 @@ export const milestones: Milestone[] = [
   {
     id: "today",
     date: "2026-06-22",
-    side: "A",
+    side: "B",
     title: "Ahora mi cumple jiji",
     body: "Aunque no tuviera muchas ganas, me anima que lo celebre y poder seguir estando contigo a día de hoy.",
     photos: [photo("today", 2048, 1536, "Ahora mi cumple jiji")],
