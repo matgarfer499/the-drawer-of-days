@@ -1,0 +1,19 @@
+# Controls what the Vercel CLI uploads on `vercel deploy`. The CLI does NOT read
+# .gitignore, so the (gitignored) real photos under src/assets/photos/** DO upload —
+# that's intended. This file only trims the upload and keeps local secrets/config off Vercel.
+#
+# Do NOT add src/assets/photos here — those are exactly what must reach the build.
+
+# Stale local build output (Vercel rebuilds remotely)
+dist
+
+# Local-only secrets / config (defensive — keep the Context7 token off Vercel)
+.env
+.env.*
+!.env.example
+.claude
+
+# Test / tooling output
+coverage
+*.log
+.pnpm-store
