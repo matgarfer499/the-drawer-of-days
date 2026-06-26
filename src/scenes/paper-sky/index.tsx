@@ -24,7 +24,8 @@ const ui = tv({
       "absolute inset-x-0 top-[max(0.75rem,env(safe-area-inset-top))] z-10 flex flex-col items-center gap-0.5 text-center",
     title: "font-display type-title text-2xl text-silver-pen rotate-[var(--seed-rot)]",
     hint: "flex items-center gap-2 font-hand text-xl text-silver-pen/70",
-    field: "absolute inset-0 z-[2]",
+    // above the revealed photo (detail, z-10) so every star stays visible and on top
+    field: "absolute inset-0 z-20",
     reveal:
       "pointer-events-none absolute inset-x-0 top-[38%] z-10 px-8 text-center font-display type-tender text-2xl text-silver-pen leading-snug [text-shadow:0_0_16px_var(--color-golden-hour)]",
     // the revealed photo is a passive reveal sitting above the star field (z-[2]);
