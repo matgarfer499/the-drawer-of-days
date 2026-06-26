@@ -123,8 +123,9 @@ export function Finale() {
             const spot = layout[i];
             if (!spot) return null;
             // photos keep to the upper band, hugging alternating edges, so the
-            // thesis and the promise stay clear of them on a phone
-            const y = 8 + (i / Math.max(1, ascendingPhotos.length - 1)) * 26;
+            // thesis and the promise stay clear of them on a phone; the band starts
+            // low enough that the (larger) topmost polaroids stay fully on-screen
+            const y = 16 + (i / Math.max(1, ascendingPhotos.length - 1)) * 24;
             const x = i % 2 === 0 ? 10 + (spot.x / 100) * 26 : 64 + (spot.x / 100) * 26;
             return (
               <AscendingPhoto
