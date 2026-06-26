@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Guidance for Claude Code working in **El Cajón de los Días** — an anniversary gift built as a
+Guidance for Claude Code working in **Nuestro cajón** — an anniversary gift built as a
 scene-based, scrapbook-style web *experience* (not a website you scroll). **Mobile-primary.**
 
 ## Commands

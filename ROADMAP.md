@@ -1,4 +1,4 @@
-# 🎁 El Cajón de los Días — Idea + Roadmap
+# 🎁 Nuestro cajón — Idea + Roadmap
 
 > Regalo web para el **tercer aniversario**. Una experiencia, no una página.
 > Documento vivo: concepto, diseño, arquitectura técnica, modelo de contenido y plan por fases.
@@ -29,7 +29,7 @@ Decisiones de partida del propio Matías (recogidas en la fase de ideación):
 - **Stack libre:** no anclarse a sus repos actuales; elegir lo mejor para *esta* experiencia.
 
 > Concepto, diseño y arquitectura se diseñaron con un workflow multi-agente (panel de 5 conceptos →
-> jurado de 3 lentes → expertos en diseño/IA/arquitectura/contenido). Concepto ganador: **El Cajón de los Días**.
+> jurado de 3 lentes → expertos en diseño/IA/arquitectura/contenido). Concepto ganador: **Nuestro cajón**.
 
 ### Decisiones cerradas con el usuario
 

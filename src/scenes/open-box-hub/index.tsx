@@ -149,7 +149,7 @@ export function Hub() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
-          El cajón de los días
+          Nuestro cajón
         </motion.h1>
 
         {/* the red thread sews opened keepsakes together, in the order they were seen */}

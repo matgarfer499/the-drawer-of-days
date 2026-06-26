@@ -30,7 +30,7 @@ const openHub = async () => {
   // the box opens via a two-phase pull/lift gesture; the keyboard path opens it
   // directly (Enter on the knot), which is what we drive here
   fireEvent.keyDown(await screen.findByLabelText(content.opening.ribbonHint), { key: "Enter" });
-  return screen.findByText("El cajón de los días");
+  return screen.findByText("Nuestro cajón");
 };
 
 beforeEach(() => {
@@ -56,7 +56,7 @@ describe("App navigation", () => {
     expect(await screen.findByText("La cinta")).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "Volver a la caja" }));
-    expect(await screen.findByText("El cajón de los días")).toBeTruthy();
+    expect(await screen.findByText("Nuestro cajón")).toBeTruthy();
   });
 
   it("reveals and enters the finale only after every core scene is seen", async () => {
@@ -68,7 +68,7 @@ describe("App navigation", () => {
     for (const scene of ["timeline", "letter", "sky", "recipes"] as const) {
       fireEvent.click(screen.getByText(labelFor(scene)));
       fireEvent.click(await screen.findByRole("button", { name: "Volver a la caja" }));
-      await screen.findByText("El cajón de los días");
+      await screen.findByText("Nuestro cajón");
     }
 
     fireEvent.click(await screen.findByText("abrir el doble fondo"));
@@ -90,7 +90,7 @@ describe("App focus management", () => {
     await openHub();
     fireEvent.click(screen.getByText(labelFor("timeline")));
     fireEvent.click(await screen.findByRole("button", { name: "Volver a la caja" }));
-    await screen.findByText("El cajón de los días");
+    await screen.findByText("Nuestro cajón");
     expect(document.activeElement).toBe(screen.getByText(labelFor("timeline")).closest("button"));
   });
 });
