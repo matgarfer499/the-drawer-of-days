@@ -186,31 +186,31 @@
   }
 }
 
-/* The envelope flap lifts open (folds up about its top hinge) and seals again. Pair
+/* The envelope flap folds flat to open about its top hinge, then seals again. Pair
    with origin-top [transform-box:fill-box]. */
 @keyframes envelope-open {
   0%,
-  16% {
+  18% {
     transform: scaleY(1);
   }
-  44%,
-  68% {
-    transform: scaleY(-0.5);
+  46%,
+  66% {
+    transform: scaleY(0);
   }
   100% {
     transform: scaleY(1);
   }
 }
 
-/* The letter slides up out of the envelope while the flap is open, then tucks back. */
+/* The letter rises up out of the mouth while the flap is open, then tucks back. */
 @keyframes letter-rise {
   0%,
-  16% {
+  22% {
     transform: translateY(0);
   }
-  44%,
-  68% {
-    transform: translateY(-17px);
+  46%,
+  66% {
+    transform: translateY(-24px);
   }
   100% {
     transform: translateY(0);
