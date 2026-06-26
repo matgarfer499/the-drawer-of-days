@@ -24,10 +24,11 @@ const ui = tv({
     subtitle: "-mt-1 font-hand text-2xl text-faded-rose",
     track:
       "flex w-full min-h-0 flex-1 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
-    // safe center: centred when the milestone fits, top-aligned (so its top stays
-    // reachable) when it's tall enough to scroll inside the panel
+    // h-full gives overflow-y-auto a definite height so iOS Safari actually scrolls
+    // the note inside the panel instead of spilling it under the dots; safe center
+    // keeps it centred when it fits, top-aligned (top reachable) when it's tall
     panel:
-      "flex w-full shrink-0 snap-center flex-col items-center [justify-content:safe_center] gap-4 overflow-y-auto overscroll-y-contain px-1",
+      "flex h-full w-full shrink-0 snap-center flex-col items-center [justify-content:safe_center] gap-4 overflow-y-auto overscroll-y-contain px-1",
     side: "w-fit self-center rounded-[2px] bg-kraft-tan px-2.5 py-1 font-body text-ink-sepia text-stamp uppercase tracking-[0.2em] shadow-tape rotate-[var(--seed-rot)]",
     photoGroup: "relative inline-block w-fit self-center pb-6",
     photoTape: "-top-3 -left-8 absolute z-10 -rotate-45",
@@ -36,7 +37,7 @@ const ui = tv({
     scrap: "w-fit max-w-[34ch] self-center text-center",
     milestoneTitle: "font-display text-2xl text-ink-sepia",
     body: "max-w-[30ch] font-body text-sm leading-relaxed text-faded-ink",
-    dots: "flex items-center justify-center",
+    dots: "flex shrink-0 items-center justify-center",
     dot: "grid h-11 w-11 -mx-1 place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
     dotInner: "h-2.5 w-2.5 rounded-full bg-aged-tan transition-transform",
   },
