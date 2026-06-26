@@ -45,9 +45,9 @@ const keepsake = tv({
     frame: "relative block",
     iconTilt:
       "block rotate-[var(--seed-rot)] translate-x-[var(--seed-x)] translate-y-[var(--seed-y)]",
-    icon: "h-24 w-24",
+    icon: "h-28 w-28",
     label:
-      "max-w-24 rotate-[var(--seed-rot)] translate-x-[var(--seed-x)] text-center font-hand text-lg leading-tight text-ink-sepia",
+      "max-w-28 rotate-[var(--seed-rot)] translate-x-[var(--seed-x)] text-center font-hand text-lg leading-tight text-ink-sepia",
     stamp: "absolute -top-2 -right-2 h-9 w-9 text-sm",
   },
 });
