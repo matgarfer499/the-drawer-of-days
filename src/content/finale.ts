@@ -31,7 +31,7 @@ const ascendingPhotos: AssetRef[] = ASCENDING.map(([n, width, height]) =>
 
 export const finale: Finale = {
   label: "El doble fondo",
-  thesisLine: "Cabes en mi mano y a la vez llenas el cielo.",
+  thesisLine: "Por firmar muchos más capítulos de nuestra historia juntos.",
   ascendingPhotos,
   promise: {
     frameLabel: "nuestro próximo capítulo",

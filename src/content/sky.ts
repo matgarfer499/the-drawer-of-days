@@ -15,19 +15,19 @@ export const sky: Sky = {
     },
     {
       id: "beach",
-      label: "la playa",
+      label: "playas",
       position: { x: 64, y: 40 },
       media: photo("beach", 1170, 2080, "la playa"),
     },
     {
       id: "mountains",
-      label: "la montaña",
+      label: "montañas",
       position: { x: 48, y: 22 },
       media: photo("mountains", 2048, 1536, "la montaña"),
     },
     {
       id: "city",
-      label: "la ciudad",
+      label: "ciudades",
       position: { x: 20, y: 38 },
       media: photo("city", 1200, 1600, "la ciudad"),
     },
