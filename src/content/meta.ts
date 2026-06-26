@@ -1,6 +1,5 @@
 import type { Content, Opening } from "./schema";
 
-// TODO(contenido real): fechas reales en ISO (YYYY-MM-DD).
 export const meta = {
   anniversaryDate: "2026-06-23",
   relationshipStartDate: "2023-06-24",

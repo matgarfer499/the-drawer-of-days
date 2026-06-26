@@ -1,7 +1,7 @@
 import type { HubObject } from "./schema";
 
-// TODO(contenido real): la etiqueta manuscrita de cada objeto. El arte es un icono SVG
-// animado por código (ver src/scenes/open-box-hub/keepsakes), no un asset de contenido.
+// El arte de cada objeto es un icono SVG animado por código (ver
+// src/scenes/open-box-hub/keepsakes), no un asset de contenido.
 // Order = hub arrangement + guided-tour order: timeline → sky → recipes → letter
 export const hubObjects: HubObject[] = [
   { id: "cassette", label: "nuestra cinta", scene: "timeline", palmSize: true },
