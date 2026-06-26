@@ -19,7 +19,9 @@ const ui = tv({
       "absolute inset-0 z-30 flex flex-col items-center justify-center gap-5 bg-night-paper/92 px-8 text-center",
     message:
       "max-w-md font-display type-tender text-4xl text-silver-pen leading-tight [text-shadow:0_0_24px_var(--color-golden-hour)]",
-    signature: "font-hand text-xl text-silver-pen/80",
+    // cap the width (like the message) so it wraps/centres within px-8 instead of
+    // running one max-content line off the edge and clipping the last word
+    signature: "max-w-xs font-hand text-xl text-silver-pen/80",
   },
 });
 
