@@ -1,74 +1,135 @@
 import { useReducedMotion } from "@features/reduced-motion";
-import { motion } from "motion/react";
+import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { useState } from "react";
 import { tv } from "tailwind-variants";
 import { audioEngine } from "./AudioEngine";
 import type { PlayableTrack } from "./playlist";
 import { useAudio } from "./useAudio";
 import { usePlaylist } from "./usePlaylist";
-
-/** mini = a tiny album thumbnail with the now-playing bars; expanded = controls. */
-type IslandMode = "mini" | "expanded";
+import { useTrackProgress } from "./useTrackProgress";
 
 const island = tv({
   slots: {
-    root: "pointer-events-none fixed top-[max(0.75rem,env(safe-area-inset-top))] right-[max(0.75rem,env(safe-area-inset-right))] z-50 flex flex-col items-end",
-    shell:
-      "pointer-events-auto flex flex-col overflow-hidden rounded-3xl bg-paper-cream/90 text-ink-sepia shadow-paper backdrop-blur-sm",
+    // The mini thumbnail lives top-right; the expanded sheet is bottom-anchored —
+    // two separate fixed roots, each click-through except its own surface.
+    miniRoot:
+      "pointer-events-none fixed top-[max(0.75rem,env(safe-area-inset-top))] right-[max(0.75rem,env(safe-area-inset-right))] z-50",
+    sheetRoot:
+      "pointer-events-none fixed inset-x-0 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-50 flex justify-center px-3",
+    // A transparent catcher behind the sheet — a tap outside collapses it.
+    catcher: "pointer-events-auto fixed inset-0 z-40 cursor-default bg-transparent",
+
+    // ── mini ──
     miniBtn:
-      "relative block shrink-0 rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
-    cover: "block shrink-0 rounded-xl object-cover",
-    coverFallback:
-      "grid shrink-0 place-items-center rounded-xl bg-kraft-tan/70 text-rose-deep leading-none",
-    // the "now playing" equalizer, laid over the thumbnail
-    eq: "pointer-events-none absolute inset-0 flex items-end justify-center gap-[3px] rounded-xl bg-ink-sepia/40 p-2.5",
+      "pointer-events-auto relative block rounded-island bg-paper-cream/90 p-1 text-ink-sepia shadow-paper backdrop-blur-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
+    // 24px corners inside a 28px shell with p-1(4px) → concentric with the shell.
+    miniCover: "block size-12 rounded-3xl object-cover",
+    miniFallback:
+      "grid size-12 place-items-center rounded-3xl bg-kraft-tan/70 text-2xl text-rose-deep leading-none",
+    eq: "pointer-events-none absolute inset-1 flex items-end justify-center gap-[3px] rounded-3xl bg-ink-sepia/40 p-2.5",
     eqBar: "w-[3px] origin-bottom rounded-full bg-paper-cream",
-    header: "flex items-center gap-2",
-    meta: "flex min-w-0 flex-1 flex-col leading-tight",
-    title: "truncate font-display text-sm",
-    artist: "truncate font-hand text-xs text-faded-ink",
-    chip: "grid size-11 shrink-0 place-items-center rounded-full text-faded-ink motion-safe:transition-transform motion-safe:active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
-    controls: "flex items-center justify-center gap-4",
+
+    // ── expanded bottom sheet (Apple "now playing") ──
+    sheet:
+      "pointer-events-auto flex w-full max-w-md flex-col gap-3 rounded-island bg-paper-cream/95 p-4 text-ink-sepia shadow-paper-lifted backdrop-blur-md",
+    grabRow: "flex justify-center",
+    grabBtn:
+      "flex h-7 w-16 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
+    grab: "h-1.5 w-10 rounded-full bg-ink-sepia/20",
+    art: "block aspect-square w-full rounded-2xl object-cover shadow-paper",
+    artFallback:
+      "grid aspect-square w-full place-items-center rounded-2xl bg-kraft-tan/70 text-6xl text-rose-deep leading-none shadow-paper",
+    meta: "flex flex-col gap-0.5 px-0.5 text-left",
+    title: "truncate font-display text-lg",
+    artist: "truncate font-hand text-base text-faded-ink",
+
+    // progress (ABOVE the transport)
+    progress: "flex flex-col gap-1",
+    timeRow:
+      "flex items-center justify-between px-0.5 font-body text-xs text-faded-ink tabular-nums",
+
+    // transport
+    controls: "flex items-center justify-center gap-8",
     iconBtn:
       "grid size-11 place-items-center rounded-full text-ink-sepia motion-safe:transition-transform motion-safe:active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
     playBtn:
-      "grid size-12 place-items-center rounded-full bg-faded-rose text-paper-cream shadow-paper motion-safe:transition-transform motion-safe:active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
-    dots: "flex items-center justify-center gap-1.5",
-    pip: "h-1.5 rounded-full bg-ink-sepia/25 transition-all",
-  },
-  variants: {
-    mode: {
-      mini: { shell: "p-1" },
-      expanded: { shell: "w-[min(17rem,calc(100vw-5rem))] gap-2 p-3" },
-    },
+      "grid size-14 place-items-center rounded-full bg-faded-rose text-paper-cream shadow-paper motion-safe:transition-transform motion-safe:active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
+
+    // volume (BOTTOMMOST), a speaker at each end
+    volumeRow: "flex items-center gap-1.5",
+    volBtn:
+      "grid size-11 shrink-0 place-items-center rounded-full text-faded-ink motion-safe:transition-transform motion-safe:active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
+    volGlyph: "grid size-9 shrink-0 place-items-center text-faded-ink",
+
+    // shared accessible range (scrubber + volume); pseudo-elements via range-paper
+    range:
+      "range-paper h-11 w-full flex-1 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-deep",
   },
 });
 
-/** Album cover, or a warm fallback glyph when the art URL is absent. */
-function Cover({ track, size }: { track: PlayableTrack; size: string }) {
-  const { cover, coverFallback } = island();
+type Slots = ReturnType<typeof island>;
+
+/** CSS-var fill % for the WebKit range track — the same sanctioned inline-style
+ *  exception as `seededTransformVars`. Consumed by `range-paper`'s track gradient. */
+function fillVar(pct: number): Record<`--${string}`, string> {
+  const clamped = Math.max(0, Math.min(100, pct));
+  return { "--fill": `${clamped.toFixed(2)}%` };
+}
+
+/** Seconds → `m:ss`, guarding NaN/negative (html5 duration is 0 until it loads). */
+function formatTime(seconds: number): string {
+  const s = Number.isFinite(seconds) && seconds > 0 ? seconds : 0;
+  const m = Math.floor(s / 60);
+  const rem = Math.floor(s % 60);
+  return `${m}:${rem.toString().padStart(2, "0")}`;
+}
+
+/** Album cover, or a warm fallback glyph when the art URL is absent. Carries the
+ *  shared `layoutId` so the artwork morphs from the mini thumbnail to the sheet. */
+function Cover({
+  track,
+  imgClass,
+  fallbackClass,
+  morph,
+}: {
+  track: PlayableTrack;
+  imgClass: string;
+  fallbackClass: string;
+  morph: boolean;
+}) {
+  const shared = morph
+    ? ({
+        layoutId: "np-cover",
+        transition: { type: "spring", stiffness: 300, damping: 30 },
+      } as const)
+    : {};
   if (track.art) {
     return (
-      <img src={track.art} alt={track.artAlt} className={cover({ class: size })} loading="lazy" />
+      <motion.img
+        {...shared}
+        src={track.art}
+        alt={track.artAlt}
+        className={imgClass}
+        loading="lazy"
+      />
     );
   }
   return (
-    <span className={coverFallback({ class: size })} aria-hidden="true">
+    <motion.span {...shared} className={fallbackClass} aria-hidden="true">
       ♪
-    </span>
+    </motion.span>
   );
 }
 
-/** The typical "now playing" equalizer — three bars that dance while a track
- *  plays and rest (flat) when paused or under prefers-reduced-motion. */
-function Equalizer({ active }: { active: boolean }) {
-  const { eq, eqBar } = island();
+/** The "now playing" equalizer — three bars that dance while a track plays and rest
+ *  (flat) when paused or under prefers-reduced-motion. */
+function Equalizer({ active, slots }: { active: boolean; slots: Slots }) {
   return (
-    <span className={eq()} aria-hidden="true">
+    <span className={slots.eq()} aria-hidden="true">
       {[0, 1, 2].map((i) => (
         <motion.span
           key={i}
-          className={eqBar({ class: "h-4" })}
+          className={slots.eqBar({ class: "h-4" })}
           animate={active ? { scaleY: [0.3, 1, 0.45, 0.85, 0.35] } : { scaleY: 0.35 }}
           transition={
             active
@@ -86,7 +147,7 @@ function Equalizer({ active }: { active: boolean }) {
   );
 }
 
-function MuteIcon({ muted }: { muted: boolean }) {
+function SpeakerIcon({ muted }: { muted: boolean }) {
   return (
     <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true">
       <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" />
@@ -105,136 +166,266 @@ function MuteIcon({ muted }: { muted: boolean }) {
   );
 }
 
-/**
- * The global music player — an iOS-style "dynamic island" pinned top-right (where
- * the old mute control sat), living in the App shell so it survives every scene
- * change. Its resting state is a tiny album thumbnail crowned with the now-playing
- * equalizer; tapping it expands to prev / play-pause / next over a wrap-around
- * playlist, plus the always-reachable mute toggle. The music autostarts when the
- * box opens. Under prefers-reduced-motion the size morph and the bars rest.
- */
-export function MusicIsland() {
-  const { audioUnlocked, muted, toggleMuted } = useAudio();
-  const { tracks, index, playing } = usePlaylist();
-  const reduced = useReducedMotion();
-  const [mode, setMode] = useState<IslandMode>("mini");
-  const slots = island({ mode });
+function PrevIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="size-6" aria-hidden="true" fill="currentColor">
+      <path d="M7 6v12H5V6h2zm12 0v12l-9-6 9-6z" />
+    </svg>
+  );
+}
 
-  const current = tracks[index];
-  if (!audioUnlocked || !current) return null;
+function NextIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="size-6" aria-hidden="true" fill="currentColor">
+      <path d="M17 6v12h2V6h-2zM5 6v12l9-6-9-6z" />
+    </svg>
+  );
+}
+
+function PlayPauseIcon({ playing }: { playing: boolean }) {
+  return (
+    <svg viewBox="0 0 24 24" className="size-7" aria-hidden="true" fill="currentColor">
+      {playing ? <path d="M7 5h4v14H7zm6 0h4v14h-4z" /> : <path d="M8 5v14l11-7z" />}
+    </svg>
+  );
+}
+
+/** The expanded sheet's body. Factored out so `useTrackProgress` only mounts (and
+ *  only polls) while the player is expanded. Owns the scrub interaction. */
+function NowPlaying({
+  track,
+  playing,
+  index,
+  reduced,
+  muted,
+  onToggleMute,
+  volume,
+  onVolume,
+  onCollapse,
+  slots,
+}: {
+  track: PlayableTrack;
+  playing: boolean;
+  index: number;
+  reduced: boolean;
+  muted: boolean;
+  onToggleMute: () => void;
+  volume: number;
+  onVolume: (level: number) => void;
+  onCollapse: () => void;
+  slots: Slots;
+}) {
+  const [scrub, setScrub] = useState<number | null>(null);
+  const [seekTick, setSeekTick] = useState(0);
+  const { position, duration } = useTrackProgress(playing, index, seekTick);
+
+  const hasDuration = duration > 0;
+  const raw = scrub ?? position;
+  const value = hasDuration ? Math.max(0, Math.min(raw, duration)) : 0;
+  const pct = hasDuration ? (value / duration) * 100 : 0;
+  const remaining = hasDuration ? Math.max(0, duration - value) : 0;
+
+  const commitSeek = () => {
+    if (scrub === null) return;
+    audioEngine.seekTo(scrub);
+    setSeekTick((tick) => tick + 1);
+    setScrub(null);
+  };
 
   return (
-    <div className={slots.root()}>
-      <motion.div
-        layout={!reduced}
-        transition={{ type: "spring", stiffness: 360, damping: 32 }}
-        className={slots.shell()}
-      >
-        {mode === "mini" ? (
-          <button
+    <>
+      <div className={slots.grabRow()}>
+        <button
+          type="button"
+          className={slots.grabBtn()}
+          onClick={onCollapse}
+          aria-label="Contraer el reproductor"
+        >
+          <span className={slots.grab()} aria-hidden="true" />
+        </button>
+      </div>
+
+      <Cover
+        track={track}
+        imgClass={slots.art()}
+        fallbackClass={slots.artFallback()}
+        morph={!reduced}
+      />
+
+      <div className={slots.meta()}>
+        <span className={slots.title()}>{track.title}</span>
+        <span className={slots.artist()}>{track.artist}</span>
+      </div>
+
+      <div className={slots.progress()}>
+        <input
+          type="range"
+          className={slots.range()}
+          style={fillVar(pct)}
+          min={0}
+          max={hasDuration ? duration : 1}
+          step={1}
+          value={value}
+          disabled={!hasDuration}
+          aria-label="Progreso de la canción"
+          onChange={(event) => setScrub(Number(event.currentTarget.value))}
+          onPointerUp={commitSeek}
+          onPointerCancel={commitSeek}
+          onKeyUp={commitSeek}
+          onBlur={commitSeek}
+        />
+        <div className={slots.timeRow()}>
+          <span>{formatTime(value)}</span>
+          <span>-{formatTime(remaining)}</span>
+        </div>
+      </div>
+
+      <div className={slots.controls()}>
+        <button
+          type="button"
+          className={slots.iconBtn()}
+          onClick={() => audioEngine.prev()}
+          aria-label="Canción anterior"
+        >
+          <PrevIcon />
+        </button>
+        <button
+          type="button"
+          className={slots.playBtn()}
+          onClick={() => audioEngine.togglePlay()}
+          aria-label={playing ? "Pausar" : "Reproducir"}
+        >
+          <PlayPauseIcon playing={playing} />
+        </button>
+        <button
+          type="button"
+          className={slots.iconBtn()}
+          onClick={() => audioEngine.next()}
+          aria-label="Canción siguiente"
+        >
+          <NextIcon />
+        </button>
+      </div>
+
+      <div className={slots.volumeRow()}>
+        <button
+          type="button"
+          className={slots.volBtn()}
+          onClick={onToggleMute}
+          aria-pressed={muted}
+          aria-label={muted ? "Activar el sonido" : "Silenciar"}
+        >
+          <SpeakerIcon muted={muted} />
+        </button>
+        <input
+          type="range"
+          className={slots.range()}
+          style={fillVar(volume * 100)}
+          min={0}
+          max={1}
+          step={0.01}
+          value={volume}
+          aria-label="Volumen"
+          onChange={(event) => onVolume(Number(event.currentTarget.value))}
+        />
+        <span className={slots.volGlyph()} aria-hidden="true">
+          <SpeakerIcon muted={false} />
+        </span>
+      </div>
+    </>
+  );
+}
+
+/**
+ * The global music player — an iOS-style control living in the App shell so it
+ * survives every scene change. Its resting state is a tiny album thumbnail crowned
+ * with the now-playing equalizer (top-right); tapping it expands into a near-full-width
+ * "now playing" bottom sheet — large art that morphs up from the thumbnail, a scrubbable
+ * progress bar, prev / play-pause / next, and a volume slider with a mute speaker at each
+ * end. It appears only once the box is opened, and the music autostarts then. Under
+ * prefers-reduced-motion the morph and the bars rest.
+ */
+export function MusicIsland() {
+  const { playerVisible, muted, toggleMuted, volume, setVolume } = useAudio();
+  const { tracks, index, playing } = usePlaylist();
+  // null (pre-measurement) behaves as "not reduced", matching motion's own default.
+  const reduced = useReducedMotion() ?? false;
+  const [expanded, setExpanded] = useState(false);
+  const slots = island();
+
+  const current = tracks[index];
+  if (!playerVisible || !current) return null;
+
+  return (
+    <LayoutGroup id="music-island">
+      <AnimatePresence>
+        {expanded && (
+          <motion.button
+            key="catcher"
             type="button"
-            className={slots.miniBtn()}
-            onClick={() => setMode("expanded")}
-            aria-label={`Reproductor: ${current.title} — ${current.artist}. Ampliar`}
-          >
-            <Cover track={current} size="size-12" />
-            <Equalizer active={playing && !reduced} />
-          </button>
-        ) : (
-          <>
-            <div className={slots.header()}>
-              <Cover track={current} size="size-10" />
-              <span className={slots.meta()}>
-                <span className={slots.title()}>{current.title}</span>
-                <span className={slots.artist()}>{current.artist}</span>
-              </span>
-              <button
-                type="button"
-                className={slots.chip()}
-                onClick={toggleMuted}
-                aria-label={muted ? "Activar el sonido" : "Silenciar"}
-              >
-                <MuteIcon muted={muted} />
-              </button>
-              <button
-                type="button"
-                className={slots.chip()}
-                onClick={() => setMode("mini")}
-                aria-label="Contraer el reproductor"
-              >
-                <svg viewBox="0 0 24 24" className="size-4" aria-hidden="true">
-                  <path
-                    d="M7 14l5-5 5 5"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    fill="none"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            <div className={slots.controls()}>
-              <button
-                type="button"
-                className={slots.iconBtn()}
-                onClick={() => audioEngine.prev()}
-                aria-label="Canción anterior"
-              >
-                <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true" fill="currentColor">
-                  <path d="M7 6v12H5V6h2zm12 0v12l-9-6 9-6z" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                className={slots.playBtn()}
-                onClick={() => audioEngine.togglePlay()}
-                aria-label={playing ? "Pausar" : "Reproducir"}
-              >
-                {playing ? (
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="size-6"
-                    aria-hidden="true"
-                    fill="currentColor"
-                  >
-                    <path d="M7 5h4v14H7zm6 0h4v14h-4z" />
-                  </svg>
-                ) : (
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="size-6"
-                    aria-hidden="true"
-                    fill="currentColor"
-                  >
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                )}
-              </button>
-              <button
-                type="button"
-                className={slots.iconBtn()}
-                onClick={() => audioEngine.next()}
-                aria-label="Canción siguiente"
-              >
-                <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true" fill="currentColor">
-                  <path d="M17 6v12h2V6h-2zM5 6v12l9-6-9-6z" />
-                </svg>
-              </button>
-            </div>
-
-            <div className={slots.dots()} aria-hidden="true">
-              {tracks.map((track, i) => (
-                <span
-                  key={track.id}
-                  className={slots.pip({ class: i === index ? "w-4 bg-faded-rose" : "w-1.5" })}
-                />
-              ))}
-            </div>
-          </>
+            tabIndex={-1}
+            aria-label="Cerrar el reproductor"
+            className={slots.catcher()}
+            onClick={() => setExpanded(false)}
+            initial={reduced ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reduced ? 0 : 0.2 }}
+          />
         )}
-      </motion.div>
-    </div>
+      </AnimatePresence>
+
+      <AnimatePresence initial={false}>
+        {expanded ? (
+          <motion.div
+            key="sheet"
+            className={slots.sheetRoot()}
+            initial={reduced ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reduced ? 0 : 0.22 }}
+          >
+            <div className={slots.sheet()}>
+              <NowPlaying
+                track={current}
+                playing={playing}
+                index={index}
+                reduced={reduced}
+                muted={muted}
+                onToggleMute={toggleMuted}
+                volume={volume}
+                onVolume={setVolume}
+                onCollapse={() => setExpanded(false)}
+                slots={slots}
+              />
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="mini"
+            className={slots.miniRoot()}
+            initial={reduced ? false : { opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: reduced ? 0 : 0.2 }}
+          >
+            <button
+              type="button"
+              className={slots.miniBtn()}
+              onClick={() => setExpanded(true)}
+              aria-label={`Reproductor: ${current.title} — ${current.artist}. Ampliar`}
+            >
+              <Cover
+                track={current}
+                imgClass={slots.miniCover()}
+                fallbackClass={slots.miniFallback()}
+                morph={!reduced}
+              />
+              <Equalizer active={playing && !reduced} slots={slots} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </LayoutGroup>
   );
 }

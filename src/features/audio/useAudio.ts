@@ -7,13 +7,21 @@ import { audioEngine } from "./AudioEngine";
  * Bridges the scene state machine to the AudioEngine: the open-the-box gesture
  * unlocks the context and starts the ambient loop and loads the playlist; opening
  * the box (reaching the hub) autostarts the music; the finale hands over to the
- * reserved song if one is configured. Returns the mute toggle for the
- * always-reachable control. Everything is a no-op while assets are absent.
+ * reserved song if one is configured. Returns the mute toggle and the master volume
+ * for the always-reachable controls, plus `playerVisible` — the player only shows
+ * once the box is open (hub onward), never during the door/sealed phases. Everything
+ * is a no-op while assets are absent.
  */
 export function useAudio() {
   const audioUnlocked = useExperienceStore((state) => state.audioUnlocked);
   const status = useExperienceStore((state) => state.status);
   const [muted, setMuted] = useState(false);
+  const [volume, setVolumeState] = useState(() => audioEngine.getVolume());
+
+  // The island appears only after the box is opened — not while the ribbon is being
+  // pulled (sealed) or at the door. `audioUnlocked` (true since the door) still gates
+  // the engine effects below; visibility is its own, later signal.
+  const playerVisible = status === "hub" || status === "inScene" || status === "finale";
 
   useEffect(() => {
     if (!audioUnlocked) return;
@@ -39,5 +47,10 @@ export function useAudio() {
     });
   }, []);
 
-  return { audioUnlocked, muted, toggleMuted };
+  const setVolume = useCallback((level: number) => {
+    audioEngine.setVolume(level);
+    setVolumeState(level);
+  }, []);
+
+  return { playerVisible, muted, toggleMuted, volume, setVolume };
 }

@@ -57,6 +57,10 @@ class AudioEngine {
   private song: Howl | null = null;
   private finaleStarted = false;
   private muted = false;
+  // Master level for the volume slider (0..1). Howler.volume() is a global master
+  // gain that composes multiplicatively with each Howl's own volume, so it persists
+  // across new track Howls and never needs SONG_VOLUME to change.
+  private volume = 1;
 
   // ── playlist (the dynamic island) ──────────────────────────────────────────
   private playlist: readonly PlayableTrack[] = [];
@@ -120,6 +124,44 @@ class AudioEngine {
 
   isMuted(): boolean {
     return this.muted;
+  }
+
+  /** Master volume (0..1). Global + persistent across track changes; the slider
+   *  at 1.0 reproduces the prior loudness (SONG_VOLUME stays constant). Also scales
+   *  the ambient/finale, as a master should. */
+  setVolume(level: number): void {
+    this.volume = Math.max(0, Math.min(1, level));
+    Howler.volume(this.volume);
+  }
+
+  getVolume(): number {
+    return this.volume;
+  }
+
+  // ── progress (read by the island's scrubber via a throttled rAF poll, never
+  //    through the snapshot/useSyncExternalStore) ──────────────────────────────
+
+  /** Current play position in seconds. 0 when nothing's loaded; the `seek()` getter
+   *  can hand back the Howl before its sound id is ready, so coerce defensively. */
+  getPosition(): number {
+    if (!this.howl) return 0;
+    const pos = this.howl.seek();
+    return typeof pos === "number" && Number.isFinite(pos) ? pos : 0;
+  }
+
+  /** Track length in seconds, or 0 while html5 metadata hasn't loaded (NaN/0). */
+  getDuration(): number {
+    if (!this.howl) return 0;
+    const d = this.howl.duration();
+    return Number.isFinite(d) && d > 0 ? d : 0;
+  }
+
+  /** Scrub to a position. No-op until the duration is known (guards html5 NaN/0). */
+  seekTo(seconds: number): void {
+    if (!this.howl) return;
+    const d = this.getDuration();
+    if (d <= 0) return;
+    this.howl.seek(Math.max(0, Math.min(seconds, d)));
   }
 
   // ── playlist API (driven by the dynamic island) ────────────────────────────
