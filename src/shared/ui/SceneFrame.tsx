@@ -11,7 +11,7 @@ const frame = tv({
     // scenes' inner flex-1 scroll regions and clipping their bottom controls.
     // items-center + justify-center keeps the both-axes centring short scenes rely on.
     section:
-      "absolute inset-0 flex h-[100dvh] w-[100dvw] flex-col items-center justify-center overflow-hidden px-6 text-center",
+      "absolute inset-0 flex h-[100dvh] w-[100dvw] flex-col items-center justify-center overflow-hidden text-center",
     hero: "absolute inset-3 -z-10 rounded-[2rem]",
   },
   variants: {
