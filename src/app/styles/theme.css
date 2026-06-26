@@ -59,6 +59,11 @@
   --animate-steam-rise: steam-rise 3.6s ease-in-out infinite;
   --animate-seal-pulse: seal-pulse 3.4s ease-in-out infinite;
   --animate-idle-tilt: idle-tilt 5s ease-in-out infinite;
+  /* Cutlery bob up out of the recetario pot (staggered per utensil). */
+  --animate-cutlery-rise: cutlery-rise 3.2s ease-in-out infinite;
+  /* The carta opens (flap lifts) and closes again, in step with letter-rise. */
+  --animate-envelope-open: envelope-open 4.6s ease-in-out infinite;
+  --animate-letter-rise: letter-rise 4.6s ease-in-out infinite;
   --animate-cloud-drift: cloud-drift 26s ease-in-out infinite alternate;
   --animate-light-breathe: light-breathe 7s ease-in-out infinite;
 }
@@ -167,6 +172,48 @@
   }
   50% {
     transform: rotate(0.6deg);
+  }
+}
+
+/* Cutlery rises out of the pot and dips back. Pair with [transform-box:fill-box]. */
+@keyframes cutlery-rise {
+  0%,
+  100% {
+    transform: translateY(2px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* The envelope flap lifts open (folds up about its top hinge) and seals again. Pair
+   with origin-top [transform-box:fill-box]. */
+@keyframes envelope-open {
+  0%,
+  16% {
+    transform: scaleY(1);
+  }
+  44%,
+  68% {
+    transform: scaleY(-0.5);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+/* The letter slides up out of the envelope while the flap is open, then tucks back. */
+@keyframes letter-rise {
+  0%,
+  16% {
+    transform: translateY(0);
+  }
+  44%,
+  68% {
+    transform: translateY(-17px);
+  }
+  100% {
+    transform: translateY(0);
   }
 }
 

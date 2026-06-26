@@ -1,8 +1,8 @@
 import { cn } from "@shared/lib/cn";
 import type { KeepsakeIconProps } from "./types";
 
-/** The recetario keepsake → the recipes scene. The cards peek out of the box —
- *  and something is still steaming — until it's been seen. */
+/** The recetario keepsake → the recipes scene. A pot with cutlery rising out of it,
+ *  still steaming, until the scene has been seen. */
 export function RecetarioIcon({ animate, className }: KeepsakeIconProps) {
   return (
     <svg
@@ -10,14 +10,123 @@ export function RecetarioIcon({ animate, className }: KeepsakeIconProps) {
       aria-hidden="true"
       className={cn("h-full w-full drop-shadow-sticker", className)}
     >
-      {/* steam curls drift up from the box (opacity-0 rests them when frozen) */}
+      {/* the pot's side handles (drawn first so the body laps over their inner edge) */}
+      <rect
+        x={17}
+        y={62}
+        width={11}
+        height={8}
+        rx={4}
+        className="fill-aged-tan stroke-ink-sepia"
+        strokeWidth={2.5}
+      />
+      <rect
+        x={72}
+        y={62}
+        width={11}
+        height={8}
+        rx={4}
+        className="fill-aged-tan stroke-ink-sepia"
+        strokeWidth={2.5}
+      />
+
+      {/* the dark mouth of the pot — the opening the cutlery stand in */}
+      <ellipse
+        cx={50}
+        cy={58}
+        rx={24}
+        ry={5}
+        className="fill-aged-tan/80 stroke-ink-sepia"
+        strokeWidth={2.5}
+      />
+
+      {/* a spoon, leaning left, bobbing up out of the pot */}
+      <g className={cn(animate && "motion-safe:animate-cutlery-rise")}>
+        <line
+          x1={43}
+          y1={60}
+          x2={37}
+          y2={30}
+          className="stroke-aged-tan"
+          strokeWidth={3.2}
+          strokeLinecap="round"
+        />
+        <ellipse
+          cx={36}
+          cy={25}
+          rx={4.5}
+          ry={6}
+          className="fill-paper-cream stroke-ink-sepia"
+          strokeWidth={2}
+        />
+      </g>
+
+      {/* a fork, leaning right, bobbing a beat later */}
+      <g
+        className={cn(
+          animate && "motion-safe:animate-cutlery-rise",
+          animate && "[animation-delay:550ms]",
+        )}
+      >
+        <line
+          x1={57}
+          y1={60}
+          x2={62}
+          y2={31}
+          className="stroke-aged-tan"
+          strokeWidth={3.2}
+          strokeLinecap="round"
+        />
+        <g className="stroke-ink-sepia" strokeWidth={2} strokeLinecap="round" fill="none">
+          <line x1={59} y1={29} x2={58.5} y2={20} />
+          <line x1={62.5} y1={29} x2={62.5} y2={19} />
+          <line x1={66} y1={29} x2={66.5} y2={20} />
+        </g>
+        <line
+          x1={58}
+          y1={29}
+          x2={66.5}
+          y2={29}
+          className="stroke-aged-tan"
+          strokeWidth={3}
+          strokeLinecap="round"
+        />
+      </g>
+
+      {/* the pot body, over the cutlery's lower ends — paper-cut sticker edge first */}
+      <rect
+        x={27}
+        y={58}
+        width={46}
+        height={27}
+        rx={7}
+        className="fill-paper-cream stroke-paper-cream"
+        strokeWidth={5}
+      />
+      <rect
+        x={27}
+        y={58}
+        width={46}
+        height={27}
+        rx={7}
+        className="fill-kraft-tan stroke-ink-sepia"
+        strokeWidth={3}
+      />
+      {/* a lip highlight band and a little stitched heart, lived-on */}
+      <rect x={27} y={58} width={46} height={8} rx={6} className="fill-aged-tan/40" />
+      <path
+        d="M50 79 C 47 76, 45.5 74, 47.4 72.4 C 48.6 71.5, 50 72.6, 50 73.6 C 50 72.6, 51.4 71.5, 52.6 72.4 C 54.5 74, 53 76, 50 79 Z"
+        className="fill-faded-rose/70"
+      />
+
+      {/* steam curls drifting up from the pot (opacity-0 rests them when frozen) */}
       <g
         fill="none"
         className={cn("stroke-faded-ink/60 opacity-0", animate && "motion-safe:animate-steam-rise")}
         strokeWidth={1.5}
         strokeLinecap="round"
       >
-        <path d="M17 46 C 15 43, 19 41, 17 38" />
+        <path d="M45 50 C 43 47, 47 45, 45 42" />
       </g>
       <g
         fill="none"
@@ -28,118 +137,8 @@ export function RecetarioIcon({ animate, className }: KeepsakeIconProps) {
         strokeWidth={1.5}
         strokeLinecap="round"
       >
-        <path d="M22 48 C 20 45, 24 43, 22 40" />
+        <path d="M52 49 C 50 46, 54 44, 52 41" />
       </g>
-
-      {/* a recipe card peeking from the box */}
-      <g className={cn(animate && "motion-safe:animate-peek", animate && "[animation-delay:0ms]")}>
-        <rect
-          x={26}
-          y={26}
-          width={48}
-          height={36}
-          rx={3}
-          className="fill-paper-cream stroke-paper-cream"
-          strokeWidth={5}
-        />
-        <rect
-          x={26}
-          y={26}
-          width={48}
-          height={36}
-          rx={3}
-          className="fill-paper-cream stroke-ink-sepia"
-          strokeWidth={2.5}
-        />
-        <line
-          x1={33}
-          y1={36}
-          x2={67}
-          y2={36}
-          className="stroke-faded-ink/60"
-          strokeWidth={1.5}
-          strokeLinecap="round"
-        />
-        <line
-          x1={33}
-          y1={42}
-          x2={60}
-          y2={42}
-          className="stroke-faded-ink/45"
-          strokeWidth={1.5}
-          strokeLinecap="round"
-        />
-      </g>
-      {/* a second card tab, peeking a beat later */}
-      <g
-        className={cn(animate && "motion-safe:animate-peek", animate && "[animation-delay:450ms]")}
-      >
-        <rect
-          x={36}
-          y={22}
-          width={40}
-          height={20}
-          rx={3}
-          className="fill-faded-rose/25 stroke-rose-deep"
-          strokeWidth={2.5}
-        />
-      </g>
-
-      {/* more card edges crowd the box under the lip */}
-      <rect
-        x={30}
-        y={45}
-        width={44}
-        height={6}
-        rx={2}
-        className="fill-paper-cream stroke-aged-tan/60"
-        strokeWidth={1}
-      />
-      <rect x={34} y={47} width={36} height={5} rx={2} className="fill-paper-cream/80" />
-
-      {/* a wooden spoon leans against the box */}
-      <g className="origin-center [transform-box:fill-box]">
-        <line
-          x1={84}
-          y1={30}
-          x2={78}
-          y2={54}
-          className="stroke-aged-tan"
-          strokeWidth={3}
-          strokeLinecap="round"
-        />
-        <ellipse cx={85.5} cy={25} rx={4} ry={5.5} className="fill-aged-tan" />
-      </g>
-
-      {/* the box front, over the cards' lower edge — paper-cut sticker edge first */}
-      <rect
-        x={12}
-        y={50}
-        width={76}
-        height={32}
-        rx={5}
-        className="fill-paper-cream stroke-paper-cream"
-        strokeWidth={5}
-      />
-      <rect
-        x={12}
-        y={50}
-        width={76}
-        height={32}
-        rx={5}
-        className="fill-kraft-tan stroke-ink-sepia"
-        strokeWidth={3}
-      />
-      <rect x={12} y={50} width={76} height={9} rx={4} className="fill-aged-tan/40" />
-      <rect
-        x={44}
-        y={62}
-        width={12}
-        height={5}
-        rx={2}
-        className="fill-paper-cream stroke-ink-sepia"
-        strokeWidth={1.5}
-      />
     </svg>
   );
 }
