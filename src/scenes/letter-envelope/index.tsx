@@ -9,7 +9,7 @@ import { StampPin } from "@shared/ui/StampPin";
 import { TornEdge } from "@shared/ui/TornEdge";
 import { WashiTape } from "@shared/ui/WashiTape";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { tv } from "tailwind-variants";
 import { Envelope } from "./components/Envelope";
 import { composeLetter } from "./letter";
@@ -105,9 +105,19 @@ export function LetterEnvelope() {
   const reduced = useReducedMotion() ?? false;
   const unlockedReasons = useExperienceStore((state) => state.unlockedReasons);
   const [pulled, setPulled] = useState(0);
+  const listRef = useRef<HTMLUListElement>(null);
 
   const view = composeLetter(content.reasons, unlockedReasons, pulled);
   const s = ui({ spent: view.remaining === 0 });
+
+  // a pulled reason appends below the fold; scroll the sheet all the way to its
+  // bottom (not just the scrap's top edge) so the newest scrap sits fully in view
+  // with the frame's padding as breathing room. The page itself never scrolls.
+  useEffect(() => {
+    if (pulled === 0) return;
+    const sheet = listRef.current?.parentElement;
+    sheet?.scrollTo({ top: sheet.scrollHeight, behavior: reduced ? "auto" : "smooth" });
+  }, [pulled, reduced]);
 
   let revealedIndex = -1;
 
@@ -119,7 +129,7 @@ export function LetterEnvelope() {
 
         <div className={s.sheetWrap()}>
           <PaperFrame tone="cream" elevation="lifted" padding="md" className={s.sheet()}>
-            <ul className={s.list()} aria-live="polite" aria-relevant="additions">
+            <ul ref={listRef} className={s.list()} aria-live="polite" aria-relevant="additions">
               {view.slots.map((slot) => {
                 if (slot.status === "in-envelope") return null;
                 if (slot.status === "pending") {
