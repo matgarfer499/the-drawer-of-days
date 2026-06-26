@@ -63,6 +63,7 @@ const baseContent = {
     revealMessage: "r",
   },
   song: { src: "/s.mp3", title: "t", artist: "a", ambientSrc: "/a.mp3" },
+  playlist: [{ id: "p1", title: "t", artist: "a", src: "", art: "", artAlt: "portada" }],
   finale: {
     label: "f",
     thesisLine: "t",
@@ -103,6 +104,18 @@ describe("contentSchema integrity", () => {
     const broken = {
       ...baseContent,
       milestones: [baseContent.milestones[0], { ...baseContent.milestones[0] }],
+    };
+    expect(contentSchema.safeParse(broken).success).toBe(false);
+  });
+
+  it("allows playlist src/art to be empty (URLs injected at runtime, never committed)", () => {
+    expect(contentSchema.safeParse(baseContent).success).toBe(true);
+  });
+
+  it("rejects duplicate playlist ids", () => {
+    const broken = {
+      ...baseContent,
+      playlist: [baseContent.playlist[0], { ...baseContent.playlist[0] }],
     };
     expect(contentSchema.safeParse(broken).success).toBe(false);
   });

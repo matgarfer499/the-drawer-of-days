@@ -1,3 +1,3 @@
 export { audioEngine } from "./AudioEngine";
-export { AudioLayer } from "./AudioLayer";
+export { MusicIsland } from "./MusicIsland";
 export { useAudio } from "./useAudio";

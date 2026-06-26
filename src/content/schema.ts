@@ -115,6 +115,23 @@ const skySchema = z.object({
 });
 export type Sky = z.infer<typeof skySchema>;
 
+/** A track in the global music player (the dynamic island). Copyrighted MP3s are
+ *  NEVER bundled or committed: `src`/`art` are absolute URLs injected at runtime
+ *  from env (Vercel Blob). Both may be empty when the env vars are absent — an
+ *  empty `src` drops the track (island hidden/silent), matching placeholders. */
+export const playlistTrackSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  artist: z.string().min(1),
+  /** runtime-injected audio URL (empty ⇒ track absent) */
+  src: z.string(),
+  /** runtime-injected album-art URL (empty ⇒ cover falls back to a glyph) */
+  art: z.string(),
+  /** Spanish alt for the cover (a11y) */
+  artAlt: z.string().min(1),
+});
+export type PlaylistTrack = z.infer<typeof playlistTrackSchema>;
+
 /** The finale song (+ its ambient loop). */
 export const songSchema = z.object({
   src: z.string().min(1),
@@ -187,9 +204,11 @@ export const contentSchema = z
     reasons: z.array(reasonSchema).min(1).readonly(),
     sky: skySchema,
     song: songSchema,
+    playlist: z.array(playlistTrackSchema).min(1).readonly(),
     finale: finaleSchema,
   })
   .refine((c) => hasUniqueIds(c.hubObjects), { error: "hubObjects: los ids deben ser únicos." })
+  .refine((c) => hasUniqueIds(c.playlist), { error: "playlist: los ids deben ser únicos." })
   .refine((c) => hasUniqueIds(c.milestones), { error: "milestones: los ids deben ser únicos." })
   .refine((c) => hasUniqueIds(c.recipes), { error: "recipes: los ids deben ser únicos." })
   .refine((c) => hasUniqueIds(c.reasons), { error: "reasons: los ids deben ser únicos." })

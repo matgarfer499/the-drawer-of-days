@@ -1,13 +1,21 @@
+/** Already a fetchable URL (a Vercel Blob playlist track) — not a bundled asset. */
+const ABSOLUTE_URL = /^https?:\/\//i;
+
 /**
- * Map a content audio path (e.g. `@assets/audio/our-song.mp3`) to its real,
- * bundled URL by basename. Returns null when the file isn't in the bundle — which
- * is the whole placeholder era, so the AudioEngine simply stays silent until the
- * real MP3s are dropped into `src/assets/audio` (no code change needed then). Pure.
+ * Resolve a content audio path to a real, playable source. Two cases:
+ *
+ * - An **absolute http(s) URL** (a playlist song hosted on Vercel Blob, injected
+ *   from env) passes straight through to be streamed (`html5: true`) — never
+ *   bundled, never committed.
+ * - Otherwise a `@assets/audio/…` path is matched **by basename** to its bundled
+ *   URL (the ambient loop / finale song). Returns null when the file isn't in the
+ *   bundle — the placeholder era — so the engine simply stays silent. Pure.
  */
 export function resolveAudioSrc(
   contentPath: string,
   byBasename: Readonly<Record<string, string>>,
 ): string | null {
+  if (ABSOLUTE_URL.test(contentPath)) return contentPath;
   const basename = contentPath.split("/").pop();
   if (!basename) return null;
   return byBasename[basename] ?? null;

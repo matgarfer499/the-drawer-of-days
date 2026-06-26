@@ -1,4 +1,4 @@
-import { AudioLayer } from "@features/audio";
+import { MusicIsland } from "@features/audio";
 import { useSceneUrlSync } from "@features/scene-engine";
 import { CloseControl } from "@shared/ui/CloseControl";
 import { ScrapbookDefs } from "@shared/ui/ScrapbookDefs";
@@ -16,7 +16,7 @@ export function App() {
   return (
     <>
       <ScrapbookDefs />
-      <AudioLayer />
+      <MusicIsland />
       <CanvasLayer />
       <SceneRouter />
       <CloseControl />

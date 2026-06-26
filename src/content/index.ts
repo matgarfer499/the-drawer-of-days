@@ -1,6 +1,7 @@
 import { finale } from "./finale";
 import { hubObjects } from "./hub";
 import { meta, opening } from "./meta";
+import { playlist } from "./playlist";
 import { reasons } from "./reasons";
 import { recipes } from "./recipes";
 import { scenes } from "./scenes";
@@ -25,6 +26,7 @@ export const content = contentSchema.parse({
   reasons,
   sky,
   song,
+  playlist,
   finale,
 });
 
@@ -36,6 +38,7 @@ export type {
   HubObject,
   Milestone,
   Opening,
+  PlaylistTrack,
   Reason,
   RecipeCard,
   RecipeCardKind,
